@@ -1,2 +1,1 @@
-# docker-k8s-study
-docker-k8s-study
+# Docker, K8S Study
