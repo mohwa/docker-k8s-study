@@ -2,7 +2,7 @@
 node_modules/
 
 # lock file
-yarn.lock
+# yarn.lock
 
 # log
 *.log*
@@ -17,19 +17,9 @@ yarn-error.log*
 .vscode/
 
 # output
-.out
 dist/
-th-bank-webapp*.tar.gz
-.jscramblerrc
-.sentryclirc
-*.zip
 
-# languages
-src/languages/
 
-# test
-tests/cypress/screenshots
+# cache
+.eslintcache
 
-# env
-.env
-.env.local
