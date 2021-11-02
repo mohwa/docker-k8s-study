@@ -1,0 +1,23 @@
+version: "3"
+services:
+  client:
+    build:
+      # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: docker-react-test-client
+    volumes:
+      # client 폴더안의 모든 파일 or 폴더들을 매핑한다.
+      - ./client:/usr/src/app
+      # https://ui.toast.com/weekly-pick/ko_20160823
+      # 다만 client/node_modules 폴더는 매핑하지않는다.
+      - /usr/src/app/node_modules
+  nginx:
+    restart: always
+    build:
+      # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: docker-react-test-nginx
+    ports:
+      - "3001:80"

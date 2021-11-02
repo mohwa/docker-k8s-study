@@ -1,0 +1,83 @@
+# This is a basic workflow to help you get started with Actions
+name: CI
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ feature/docker-react-test ]
+#    branches: [ master ]
+
+  env:
+    # ghcr: github container registry
+    # ghcr.io/{계정이름}/{이미지명}
+    REGISTRY: ghcr.io
+#    DOCKER_CONTAINER_NAME: docker-react-test-client
+    DOCKER_IMAGE_NAME: ${{ github.repository }}
+    VERSION: ${{ github.sha }}
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v2
+        # docker buildx: 여러 플랫폼(linux/amd64, linux/arm64, linux/ppc64le, linux/s390x, linux/386 등)으로 빌드하는 기능등을 포함한 CLI 확장 플러그인이다.
+        # https://github.com/docker/setup-buildx-action
+        # https://meetup.toast.com/posts/255
+      - name: Set up docker buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Cache docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ env.VERSION }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+        # ghcr: github 패키지 저장소(개별 docker registry 로 사용할 수 있다)
+        # https://github.com/features/packages
+        # 가격 정책
+        # https://github.com/features/packages#pricing
+      - name: Login to ghcr
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          # 생성한 repository secrets 를 정의한다.
+          password: ${{ secrets.GHP_REACT_TEST }}
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ env.DOCKER_IMAGE_NAME }}:${{ env.VERSION }}
+
+  deploy:
+    needs: build
+    name: Deploy
+    runs-on: [ self-hosted, label-production ]
+    steps:
+      - name: Login to ghcr
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHP_REACT_TEST }}
+      - name: Docker run
+        # container 이름을 가진 docker process 가 있다면, 해당 process 를 stop 한 후, container 를 삭제한다.
+        run: |
+          docker ps -q --filter "name=${{ env.DOCKER_CONTAINER_NAME }}" | grep -q . && docker stop ${{ env.DOCKER_CONTAINER_NAME }} && docker rm -fv ${{ env.DOCKER_CONTAINER_NAME }}
+          docker-compose up
+
+  cleanup:
+    needs: [ build, deploy ]
+    name: Clean up docker images
+    runs-on: [ self-hosted, production ]
+    steps:
+      -   name: Clean up docker images
+          # 생성된 이전 docker image 를 삭제한다.
+          run:
+            docker rmi $(docker images --filter "before=${{ env.DOCKER_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.DOCKER_IMAGE_NAME }}:*" -q)
