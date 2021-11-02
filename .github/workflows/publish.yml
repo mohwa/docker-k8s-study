@@ -8,13 +8,13 @@ on:
     branches: [ feature/docker-react-test ]
 #    branches: [ master ]
 
-  env:
-    # ghcr: github container registry
-    # ghcr.io/{계정이름}/{이미지명}
-    REGISTRY: ghcr.io
+env:
+  # ghcr: github container registry
+  # ghcr.io/{계정이름}/{이미지명}
+  REGISTRY: ghcr.io
 #    DOCKER_CONTAINER_NAME: docker-react-test-client
-    DOCKER_IMAGE_NAME: ${{ github.repository }}
-    VERSION: ${{ github.sha }}
+  DOCKER_IMAGE_NAME: ${{ github.repository }}
+  VERSION: ${{ github.sha }}
 
 jobs:
   build:
