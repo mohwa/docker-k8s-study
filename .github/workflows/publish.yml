@@ -23,6 +23,8 @@ jobs:
     steps:
       - name: Check out source code
         uses: actions/checkout@v2
+        with:
+          ref: feature/docker-react-test
         # docker buildx: 여러 플랫폼(linux/amd64, linux/arm64, linux/ppc64le, linux/s390x, linux/386 등)으로 빌드하는 기능등을 포함한 CLI 확장 플러그인이다.
         # https://github.com/docker/setup-buildx-action
         # https://meetup.toast.com/posts/255
@@ -47,37 +49,38 @@ jobs:
           username: ${{ github.actor }}
           # 생성한 repository secrets 를 정의한다.
           password: ${{ secrets.GHP_REACT_TEST }}
-      - name: Build and push
-        id: docker_build
+      - name: Build and push for client service
+        id: client_service_build
         uses: docker/build-push-action@v2
         with:
+          context: ./client
           builder: ${{ steps.buildx.outputs.name }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ env.DOCKER_IMAGE_NAME }}:${{ env.VERSION }}
 
-  deploy:
-    needs: build
-    name: Deploy
-    runs-on: [ self-hosted, label-production ]
-    steps:
-      - name: Login to ghcr
-        uses: docker/login-action@v1
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GHP_REACT_TEST }}
-      - name: Docker run
-        # container 이름을 가진 docker process 가 있다면, 해당 process 를 stop 한 후, container 를 삭제한다.
-        run: |
-          docker ps -q --filter "name=${{ env.DOCKER_CONTAINER_NAME }}" | grep -q . && docker stop ${{ env.DOCKER_CONTAINER_NAME }} && docker rm -fv ${{ env.DOCKER_CONTAINER_NAME }}
-          docker-compose up
-
-  cleanup:
-    needs: [ build, deploy ]
-    name: Clean up docker images
-    runs-on: [ self-hosted, production ]
-    steps:
-      -   name: Clean up docker images
-          # 생성된 이전 docker image 를 삭제한다.
-          run:
-            docker rmi $(docker images --filter "before=${{ env.DOCKER_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.DOCKER_IMAGE_NAME }}:*" -q)
+#  deploy:
+#    needs: build
+#    name: Deploy
+#    runs-on: [ self-hosted, label-production ]
+#    steps:
+#      - name: Login to ghcr
+#        uses: docker/login-action@v1
+#        with:
+#          registry: ${{ env.REGISTRY }}
+#          username: ${{ github.actor }}
+#          password: ${{ secrets.GHP_REACT_TEST }}
+#      - name: Docker run
+#        # container 이름을 가진 docker process 가 있다면, 해당 process 를 stop 한 후, container 를 삭제한다.
+#        run: |
+#          docker ps -q --filter "name=${{ env.DOCKER_CONTAINER_NAME }}" | grep -q . && docker stop ${{ env.DOCKER_CONTAINER_NAME }} && docker rm -fv ${{ env.DOCKER_CONTAINER_NAME }}
+#          docker run
+#
+#  cleanup:
+#    needs: [ build, deploy ]
+#    name: Clean up docker images
+#    runs-on: [ self-hosted, production ]
+#    steps:
+#      -   name: Clean up docker images
+#          # 생성된 이전 docker image 를 삭제한다.
+#          run:
+#            docker rmi $(docker images --filter "before=${{ env.DOCKER_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.DOCKER_IMAGE_NAME }}:*" -q)
