@@ -2,7 +2,7 @@
 version: "3"
 services:
   client:
-    image: docker-k8s-study-client
+    image: ghcr.io/mohwa/docker-k8s-study-client
 #    build:
 #      # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
 #      context: ./client
@@ -16,7 +16,7 @@ services:
       - /usr/src/app/node_modules
   nginx:
     restart: always
-    image: docker-k8s-study-nginx
+    image: ghcr.io/mohwa/docker-k8s-study-nginx
 #    build:
 #      # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
 #      context: ./nginx
