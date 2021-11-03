@@ -1,10 +1,12 @@
+# yaml 포맷 버전(docker-compose 1.10 이상부터는 해당 버전을 3으로 설정한다)
 version: "3"
 services:
   client:
-    build:
-      # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
-      context: ./client
-      dockerfile: Dockerfile
+    image: docker-k8s-study-client
+#    build:
+#      # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
+#      context: ./client
+#      dockerfile: Dockerfile
     container_name: docker-k8s-study-client
     volumes:
       # client 폴더안의 모든 파일 or 폴더들을 매핑한다.
@@ -14,10 +16,11 @@ services:
       - /usr/src/app/node_modules
   nginx:
     restart: always
-    build:
-      # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
-      context: ./nginx
-      dockerfile: Dockerfile
+    image: docker-k8s-study-nginx
+#    build:
+#      # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
+#      context: ./nginx
+#      dockerfile: Dockerfile
     container_name: docker-k8s-study-nginx
     ports:
       - "3001:80"
