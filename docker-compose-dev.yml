@@ -5,7 +5,7 @@ services:
       # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
       context: ./client
       dockerfile: Dockerfile.dev
-    container_name: docker-react-test-client-dev
+    container_name: docker-k8s-study-client-dev
     ports:
       - "3000:3000"
     volumes:

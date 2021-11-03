@@ -5,7 +5,7 @@ services:
       # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
       context: ./client
       dockerfile: Dockerfile
-    container_name: docker-react-test-client
+    container_name: docker-k8s-study-client
     volumes:
       # client 폴더안의 모든 파일 or 폴더들을 매핑한다.
       - ./client:/usr/src/app
@@ -18,6 +18,6 @@ services:
       # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
       context: ./nginx
       dockerfile: Dockerfile
-    container_name: docker-react-test-nginx
+    container_name: docker-k8s-study-nginx
     ports:
       - "3001:80"

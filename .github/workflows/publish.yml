@@ -15,7 +15,10 @@ env:
   # ghcr: github container registry(개별 docker registry 로도 사용할 수 있다)
   # https://github.com/features/packages
   REGISTRY: ghcr.io
-  IMAGE_NAME: ghcr.io/${{ github.repository }}
+  CLIENT_IMAGE_NAME: ghcr.io/${{ github.repository }}/client
+  NGINX_IMAGE_NAME: ghcr.io/${{ github.repository }}/nginx
+  CLIENT_CONTAINER_NAME: docker-k8s-study-client
+  NGINX_CONTAINER_NAME: docker-k8s-study-nginx
   VERSION: ${{ github.sha }}
   CLIENT_CONTEXT: ./client
   NGINX_CONTEXT: ./nginx
@@ -52,9 +55,9 @@ jobs:
           username: ${{ github.repository_owner }}
           # 생성한 repository secrets 값을 정의한다.
           password: ${{ secrets.GHP_REACT_TEST }}
-      - name: Build and push
+      - name: Client service build and push
         uses: docker/build-push-action@v2
-        id: docker_build
+        id: client_service_build
         with:
           context: ${{ env.CLIENT_CONTEXT }}
           builder: ${{ steps.buildx.outputs.name }}
@@ -62,32 +65,46 @@ jobs:
           # ghcr 에 저장할 tag 이름은 ghcr.io/<OWNER>/<IMAGE-NAME> 형식을 따른다.
           # 저장된 이미지는 github 저장소가 아닌, 사용자나 조직 같은 계정 밑에서 관리된다.
           tags: |
-              ${{ env.IMAGE_NAME }}:latest
-              ${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+              ${{ env.CLIENT_IMAGE_NAME }}:latest
+              ${{ env.CLIENT_IMAGE_NAME }}:${{ env.VERSION }}
+      - name: Nginx service build and push
+        uses: docker/build-push-action@v2
+        id: nginx_service_build
+        with:
+          context: ${{ env.NGINX_CONTEXT }}
+          builder: ${{ steps.buildx.outputs.name }}
+          push: true
+          # ghcr 에 저장할 tag 이름은 ghcr.io/<OWNER>/<IMAGE-NAME> 형식을 따른다.
+          # 저장된 이미지는 github 저장소가 아닌, 사용자나 조직 같은 계정 밑에서 관리된다.
+          tags: |
+            ${{ env.NGINX_IMAGE_NAME }}:latest
+            ${{ env.NGINX_IMAGE_NAME }}:${{ env.VERSION }}
 
-#  deploy:
-#    needs: build
-#    name: Deploy
-#    runs-on: [ self-hosted, label-production ]
-#    steps:
-#      - name: Login to ghcr
-#        uses: docker/login-action@v1
-#        with:
-#          registry: ${{ env.REGISTRY }}
-#          username: ${{ github.actor }}
-#          password: ${{ secrets.GHP_REACT_TEST }}
-#      - name: Docker run
-#        # container 이름을 가진 docker process 가 있다면, 해당 process 를 stop 한 후, container 를 삭제한다.
-#        run: |
-#          docker ps -q --filter "name=${{ env.DOCKER_CONTAINER_NAME }}" | grep -q . && docker stop ${{ env.DOCKER_CONTAINER_NAME }} && docker rm -fv ${{ env.DOCKER_CONTAINER_NAME }}
-#          docker run
-#
-#  cleanup:
-#    needs: [ build, deploy ]
-#    name: Clean up docker images
-#    runs-on: [ self-hosted, production ]
-#    steps:
-#      -   name: Clean up docker images
-#          # 생성된 이전 docker image 를 삭제한다.
-#          run:
-#            docker rmi $(docker images --filter "before=${{ env.DOCKER_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.DOCKER_IMAGE_NAME }}:*" -q)
+  deploy:
+    needs: build
+    name: Deploy
+    runs-on: [ self-hosted, label-production ]
+    steps:
+      - name: Login to ghcr
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHP_REACT_TEST }}
+      - name: Docker run
+        # container 이름을 가진 docker process 가 있다면, 해당 process 를 stop 한 후, container 를 삭제한다.
+        run: |
+          docker ps -q --filter "name=${{ env.CLIENT_CONTAINER_NAME }}" | grep -q . && docker stop ${{ env.CLIENT_CONTAINER_NAME }} && docker rm -fv ${{ env.CLIENT_CONTAINER_NAME }}
+          docker ps -q --filter "name=${{ env.NGINX_CONTAINER_NAME }}" | grep -q . && docker stop ${{ env.NGINX_CONTAINER_NAME }} && docker rm -fv ${{ env.NGINX_CONTAINER_NAME }}
+          docker-compose up
+
+  cleanup:
+    needs: [ build, deploy ]
+    name: Clean up docker images
+    runs-on: [ self-hosted, production ]
+    steps:
+      -   name: Clean up docker images
+          # 생성된 이전 docker image 를 삭제한다.
+          run: |
+            docker rmi $(docker images --filter "before=${{ env.CLIENT_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.CLIENT_IMAGE_NAME }}:*" -q)
+            docker rmi $(docker images --filter "before=${{ env.NGINX_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.NGINX_IMAGE_NAME }}:*" -q)
