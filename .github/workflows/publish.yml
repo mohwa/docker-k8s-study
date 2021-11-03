@@ -1,42 +1,32 @@
 # This is a basic workflow to help you get started with Actions
-name: Docker CI
+name: ci and cd
 
 # Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ feature/docker-react-test ]
+    branches: [feature/docker-react-test]
 #    branches: [ master ]
 
 env:
-  # ghcr: github container registry
-  # ghcr.io/{계정이름}/{이미지명}
+  # ghcr: github container registry(개별 docker registry 로도 사용할 수 있다)
+  # https://github.com/features/packages
   REGISTRY: ghcr.io
-#    DOCKER_CONTAINER_NAME: docker-react-test-client
-  DOCKER_IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/${{ github.repository }}
   VERSION: ${{ github.sha }}
 
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-#    strategy:
-#      matrix:
-#        node: [17.x]
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
         with:
           ref: feature/docker-react-test
-        # docker buildx: 여러 플랫폼(linux/amd64, linux/arm64, linux/ppc64le, linux/s390x, linux/386 등)으로 빌드하는 기능등을 포함한 CLI 확장 플러그인이다.
-        # https://github.com/docker/setup-buildx-action
+        # docker buildx: 여러 플랫폼(또는 아키텍쳐)(linux/amd64, linux/arm64, linux/ppc64le, linux/s390x, linux/386 등)으로 빌드하는 기능 등을 포함한 CLI 확장 플러그인이다.
         # https://meetup.toast.com/posts/255
-#      - name: Set up nodejs
-#        uses: actions/setup-node@v2
-#        with:
-#          node-version: '17.x'
-#          check-latest: true
-#          registry-url: https://registry.npmjs.org/
+        # https://github.com/docker/setup-buildx-action
       - name: Set up docker buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
@@ -47,7 +37,6 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ env.VERSION }}
           restore-keys: |
             ${{ runner.os }}-buildx-
-        # ghcr: github 패키지 저장소(개별 docker registry 로 사용할 수 있다)
         # https://github.com/features/packages
         # 가격 정책
         # https://github.com/features/packages#pricing
@@ -56,18 +45,18 @@ jobs:
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.repository_owner }}
-          # 생성한 repository secrets 를 정의한다.
+          # 생성한 repository secrets 값을 정의한다.
           password: ${{ secrets.GHP_REACT_TEST }}
       - name: Build and push
         uses: docker/build-push-action@v2
         id: docker_build
         with:
           context: ./client
-#          builder: ${{ steps.buildx.outputs.name }}
+          builder: ${{ steps.buildx.outputs.name }}
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.DOCKER_IMAGE_NAME }}:latest
-            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.VERSION }}
+              ${{ env.IMAGE_NAME }}:latest
+              ${{ env.IMAGE_NAME }}:${{ env.VERSION }}
 
 #  deploy:
 #    needs: build
