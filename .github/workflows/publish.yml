@@ -83,6 +83,7 @@ jobs:
   deploy:
     needs: build
     name: Deploy
+    runs-on: ubuntu-latest
 #    runs-on: [ self-hosted, label-production ]
     # self-hosted 가 없으면 ms azuer 에 배포되는걸까?
 #    runs-on: [ self-hosted ]
@@ -103,6 +104,7 @@ jobs:
   cleanup:
     needs: [ build, deploy ]
     name: Clean up docker images
+    runs-on: ubuntu-latest
 #    runs-on: [ self-hosted, production ]
 #    runs-on: [ self-hosted ]
     steps:
