@@ -96,7 +96,7 @@ jobs:
         run: |
           docker ps -q --filter "name=${{ env.CLIENT_CONTAINER_NAME }}" | grep -q . && docker stop ${{ env.CLIENT_CONTAINER_NAME }} && docker rm -fv ${{ env.CLIENT_CONTAINER_NAME }}
           docker ps -q --filter "name=${{ env.NGINX_CONTAINER_NAME }}" | grep -q . && docker stop ${{ env.NGINX_CONTAINER_NAME }} && docker rm -fv ${{ env.NGINX_CONTAINER_NAME }}
-          docker-compose up
+          docker-compose -d up
 
   cleanup:
     needs: [ build, deploy ]
