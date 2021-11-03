@@ -8,11 +8,14 @@ on:
     branches: [feature/docker-react-test]
 #    branches: [ master ]
 
+# ghcr 패키지(docker image) URL
+# https://github.com/users/mohwa/packages/container/package/mohwa%2Fdocker-k8s-study
+
 env:
   # ghcr: github container registry(개별 docker registry 로도 사용할 수 있다)
   # https://github.com/features/packages
   REGISTRY: ghcr.io
-  IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/${{ github.repository }}
+  IMAGE_NAME: ghcr.io/${{ github.repository }}
   VERSION: ${{ github.sha }}
   CLIENT_CONTEXT: ./client
   NGINX_CONTEXT: ./nginx
@@ -56,6 +59,8 @@ jobs:
           context: ${{ env.CLIENT_CONTEXT }}
           builder: ${{ steps.buildx.outputs.name }}
           push: true
+          # ghcr 에 저장할 tag 이름은 ghcr.io/<OWNER>/<IMAGE-NAME> 형식을 따른다.
+          # 저장된 이미지는 github 저장소가 아닌, 사용자나 조직 같은 계정 밑에서 관리된다.
           tags: |
               ${{ env.IMAGE_NAME }}:latest
               ${{ env.IMAGE_NAME }}:${{ env.VERSION }}
