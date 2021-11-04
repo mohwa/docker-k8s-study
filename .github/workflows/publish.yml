@@ -83,9 +83,9 @@ jobs:
   deploy:
     needs: build
     name: Deploy
-#    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 #    runs-on: [ self-hosted, label-production ]
-    runs-on: [ self-hosted ]
+#    runs-on: [ self-hosted ]
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
@@ -105,9 +105,9 @@ jobs:
   cleanup:
     needs: [ build, deploy ]
     name: Clean up docker images
-#    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 #    runs-on: [ self-hosted, production ]
-    runs-on: [ self-hosted ]
+#    runs-on: [ self-hosted ]
     steps:
       -   name: Clean up docker images
           # 생성된 이전 docker image 를 삭제한다.
