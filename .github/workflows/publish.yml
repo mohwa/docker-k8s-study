@@ -84,7 +84,7 @@ jobs:
             ${{ env.NGINX_IMAGE_NAME }}:${{ env.VERSION }}
 
   cleanup:
-    needs: build
+    needs: [ build ]
     name: Clean up docker images
     runs-on: [ self-hosted ]
     steps:
@@ -101,7 +101,7 @@ jobs:
             docker rmi $(docker images --filter=reference="${{ env.NGINX_IMAGE_NAME }}:*" -q)
 
   deploy:
-    needs: [ build, deploy ]
+    needs: [ build, cleanup ]
     name: Deploy
     runs-on: [ self-hosted ]
     steps:
