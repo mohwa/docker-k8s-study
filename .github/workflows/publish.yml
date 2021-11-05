@@ -83,23 +83,8 @@ jobs:
           tags: |
             ${{ env.NGINX_IMAGE_NAME }}:${{ env.VERSION }}
 
-  cleanup:
-    needs: build
-    name: Clean up docker images
-    runs-on: [ self-hosted ]
-    steps:
-      -   name: Clean up docker images
-        # 생성된 이전 docker image 를 삭제한다.
-        #          docker rmi $(docker images --filter "before=${{ env.CLIENT_IMAGE_NAME }}:latest" --filter=reference="${{ env.CLIENT_IMAGE_NAME }}:*" -q)
-        #          docker rmi $(docker images --filter "before=${{ env.CLIENT_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.CLIENT_IMAGE_NAME }}:*" -q)
-        #          docker rmi $(docker images --filter "before=${{ env.NGINX_IMAGE_NAME }}:latest" --filter=reference="${{ env.NGINX_IMAGE_NAME }}:*" -q)
-        #          docker rmi $(docker images --filter "before=${{ env.NGINX_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.NGINX_IMAGE_NAME }}:*" -q)
-          run: |
-            docker rmi $(docker images --filter=reference="${{ env.CLIENT_IMAGE_NAME }}:*" -q)
-            docker rmi $(docker images --filter=reference="${{ env.NGINX_IMAGE_NAME }}:*" -q)
-
   deploy:
-    needs: [ build, cleanup ]
+    needs: build
     name: Deploy
     runs-on: [ self-hosted ]
     steps:
@@ -119,3 +104,19 @@ jobs:
           docker ps -q --filter "name=${{ env.CLIENT_CONTAINER_NAME }}" | grep -q . && docker stop ${{ env.CLIENT_CONTAINER_NAME }} && docker rm -fv ${{ env.CLIENT_CONTAINER_NAME }}
           docker ps -q --filter "name=${{ env.NGINX_CONTAINER_NAME }}" | grep -q . && docker stop ${{ env.NGINX_CONTAINER_NAME }} && docker rm -fv ${{ env.NGINX_CONTAINER_NAME }}
           docker-compose up -d
+
+  cleanup:
+    needs: [ build, deploy ]
+    name: Clean up docker images
+    runs-on: [ self-hosted ]
+    steps:
+      -   name: Clean up docker images
+        # 생성된 이전 docker image 를 삭제한다.
+        #          docker rmi $(docker images --filter "before=${{ env.CLIENT_IMAGE_NAME }}:latest" --filter=reference="${{ env.CLIENT_IMAGE_NAME }}:*" -q)
+        #          docker rmi $(docker images --filter "before=${{ env.CLIENT_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.CLIENT_IMAGE_NAME }}:*" -q)
+        #          docker rmi $(docker images --filter "before=${{ env.NGINX_IMAGE_NAME }}:latest" --filter=reference="${{ env.NGINX_IMAGE_NAME }}:*" -q)
+        #          docker rmi $(docker images --filter "before=${{ env.NGINX_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.NGINX_IMAGE_NAME }}:*" -q)
+          run: |
+            docker rmi $(docker images --filter=reference="${{ env.CLIENT_IMAGE_NAME }}:*" -q)
+            docker rmi $(docker images --filter=reference="${{ env.NGINX_IMAGE_NAME }}:*" -q)
+
