@@ -83,9 +83,7 @@ jobs:
   deploy:
     needs: build
     name: Deploy
-    runs-on: ubuntu-latest
-#    runs-on: [ self-hosted, label-production ]
-#    runs-on: [ self-hosted ]
+    runs-on: [ self-hosted ]
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
@@ -97,8 +95,6 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GHP_REACT_TEST }}
-      - name: check ip
-        run: ifconfig
       - name: Docker run
         # container 이름을 가진 docker process 가 있다면, 해당 process 를 stop 한 후, container 를 삭제한다.
         run: |
@@ -107,9 +103,7 @@ jobs:
   cleanup:
     needs: [ build, deploy ]
     name: Clean up docker images
-    runs-on: ubuntu-latest
-#    runs-on: [ self-hosted, production ]
-#    runs-on: [ self-hosted ]
+    runs-on: [ self-hosted ]
     steps:
       -   name: Clean up docker images
           # 생성된 이전 docker image 를 삭제한다.
