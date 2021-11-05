@@ -97,7 +97,7 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GHP_REACT_TEST }}
-      - name check ip
+      - name: check ip
         run: ifconfig
       - name: Docker run
         # container 이름을 가진 docker process 가 있다면, 해당 process 를 stop 한 후, container 를 삭제한다.
