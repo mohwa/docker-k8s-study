@@ -112,7 +112,7 @@ jobs:
         uses: docker/login-action@v1
         with:
           registry: ${{ env.REGISTRY }}
-        `  username: ${{ github.actor }}
+        ` username: ${{ github.actor }}
           password: ${{ secrets.GHP_REACT_TEST }}
       - name: Clean up docker containers
         # container 이름을 가진 docker process 가 있다면, 해당 process 를 stop 한 후, container 를 삭제한다.
