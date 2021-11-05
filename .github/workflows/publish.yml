@@ -92,8 +92,6 @@ jobs:
         run: |
           docker ps -q --filter "name=${{ env.CLIENT_CONTAINER_NAME }}" | grep -q . && docker stop ${{ env.CLIENT_CONTAINER_NAME }} && docker rm -fv ${{ env.CLIENT_CONTAINER_NAME }}
           docker ps -q --filter "name=${{ env.NGINX_CONTAINER_NAME }}" | grep -q . && docker stop ${{ env.NGINX_CONTAINER_NAME }} && docker rm -fv ${{ env.NGINX_CONTAINER_NAME }}
-#        docker rmi $(docker images --filter=before="${{ env.CLIENT_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.CLIENT_IMAGE_NAME }}:*" -q)
-#        docker rmi $(docker images --filter=before="${{ env.NGINX_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.NGINX_IMAGE_NAME }}:*" -q)
       - name: Clean up docker images
         run: |
           docker rmi $(docker images --filter=reference="${{ env.CLIENT_IMAGE_NAME }}:*" -q)
