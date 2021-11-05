@@ -64,9 +64,10 @@ jobs:
           push: true
           # ghcr 에 저장할 tag 이름은 ghcr.io/<OWNER>/<IMAGE-NAME> 형식을 따른다.
           # 저장된 이미지는 github 저장소가 아닌, 사용자나 조직 같은 계정 밑에서 관리된다.
-          tags: ${{ env.CLIENT_IMAGE_NAME }}:${{ env.VERSION }}
-#            ${{ env.CLIENT_IMAGE_NAME }}:latest
-#            ${{ env.CLIENT_IMAGE_NAME }}:${{ env.VERSION }}
+#          ${{ env.CLIENT_IMAGE_NAME }}:latest
+#          ${{ env.CLIENT_IMAGE_NAME }}:${{ env.VERSION }}
+          tags: |
+            ${{ env.CLIENT_IMAGE_NAME }}:${{ env.VERSION }}
       - name: Nginx service build and push
         uses: docker/build-push-action@v2
         id: nginx_service_build
@@ -76,9 +77,11 @@ jobs:
           push: true
           # ghcr 에 저장할 tag 이름은 ghcr.io/<OWNER>/<IMAGE-NAME> 형식을 따른다.
           # 저장된 이미지는 github 저장소가 아닌, 사용자나 조직 같은 계정 밑에서 관리된다.
-          tags: ${{ env.NGINX_IMAGE_NAME }}:${{ env.VERSION }}
-#            ${{ env.NGINX_IMAGE_NAME }}:latest
-#            ${{ env.NGINX_IMAGE_NAME }}:${{ env.VERSION }}
+
+#          ${{ env.NGINX_IMAGE_NAME }}:latest
+#          ${{ env.NGINX_IMAGE_NAME }}:${{ env.VERSION }}
+          tags: |
+            ${{ env.NGINX_IMAGE_NAME }}:${{ env.VERSION }}
 
   deploy:
     needs: build
@@ -107,8 +110,10 @@ jobs:
     steps:
       -   name: Clean up docker images
           # 생성된 이전 docker image 를 삭제한다.
+#          docker rmi $(docker images --filter "before=${{ env.CLIENT_IMAGE_NAME }}:latest" --filter=reference="${{ env.CLIENT_IMAGE_NAME }}:*" -q)
+#          docker rmi $(docker images --filter "before=${{ env.CLIENT_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.CLIENT_IMAGE_NAME }}:*" -q)
+#          docker rmi $(docker images --filter "before=${{ env.NGINX_IMAGE_NAME }}:latest" --filter=reference="${{ env.NGINX_IMAGE_NAME }}:*" -q)
+#          docker rmi $(docker images --filter "before=${{ env.NGINX_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.NGINX_IMAGE_NAME }}:*" -q)
           run: |
-#            docker rmi $(docker images --filter "before=${{ env.CLIENT_IMAGE_NAME }}:latest" --filter=reference="${{ env.CLIENT_IMAGE_NAME }}:*" -q)
             docker rmi $(docker images --filter "before=${{ env.CLIENT_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.CLIENT_IMAGE_NAME }}:*" -q)
-#            docker rmi $(docker images --filter "before=${{ env.NGINX_IMAGE_NAME }}:latest" --filter=reference="${{ env.NGINX_IMAGE_NAME }}:*" -q)
             docker rmi $(docker images --filter "before=${{ env.NGINX_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.NGINX_IMAGE_NAME }}:*" -q)
