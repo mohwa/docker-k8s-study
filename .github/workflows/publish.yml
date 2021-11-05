@@ -66,9 +66,7 @@ jobs:
           # 저장된 이미지는 github 저장소가 아닌, 사용자나 조직 같은 계정 밑에서 관리된다.
 #          ${{ env.CLIENT_IMAGE_NAME }}:latest
 #          ${{ env.CLIENT_IMAGE_NAME }}:${{ env.VERSION }}
-          tags: |
-            ${{ env.CLIENT_IMAGE_NAME }}:latest
-            ${{ env.CLIENT_IMAGE_NAME }}:${{ env.VERSION }}
+          tags: ${{ env.CLIENT_IMAGE_NAME }}:${{ env.VERSION }}
       - name: Nginx service build and push
         uses: docker/build-push-action@v2
         id: nginx_service_build
@@ -78,31 +76,10 @@ jobs:
           push: true
           # ghcr 에 저장할 tag 이름은 ghcr.io/<OWNER>/<IMAGE-NAME> 형식을 따른다.
           # 저장된 이미지는 github 저장소가 아닌, 사용자나 조직 같은 계정 밑에서 관리된다.
-          tags: |
-            ${{ env.NGINX_IMAGE_NAME }}:latest
-            ${{ env.NGINX_IMAGE_NAME }}:${{ env.VERSION }}
-
-  cleanup:
-    needs: [ build ]
-    name: Clean up docker containers and images
-    runs-on: [ self-hosted ]
-    steps:
-      # 생성된 이전 docker image 를 삭제한다.
-      #          docker rmi $(docker images --filter "before=${{ env.CLIENT_IMAGE_NAME }}:latest" --filter=reference="${{ env.CLIENT_IMAGE_NAME }}:*" -q)
-      #          docker rmi $(docker images --filter "before=${{ env.CLIENT_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.CLIENT_IMAGE_NAME }}:*" -q)
-      #          docker rmi $(docker images --filter "before=${{ env.NGINX_IMAGE_NAME }}:latest" --filter=reference="${{ env.NGINX_IMAGE_NAME }}:*" -q)
-      #          docker rmi $(docker images --filter "before=${{ env.NGINX_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.NGINX_IMAGE_NAME }}:*" -q)
-      - name: Clean up docker containers
-        run: |
-          docker ps -q --filter "name=${{ env.CLIENT_CONTAINER_NAME }}" | grep -q . && docker stop ${{ env.CLIENT_CONTAINER_NAME }} && docker rm -fv ${{ env.CLIENT_CONTAINER_NAME }}
-          docker ps -q --filter "name=${{ env.NGINX_CONTAINER_NAME }}" | grep -q . && docker stop ${{ env.NGINX_CONTAINER_NAME }} && docker rm -fv ${{ env.NGINX_CONTAINER_NAME }}
-      - name: Clean up docker images
-        run: |
-          docker rmi $(docker images --filter=reference="${{ env.CLIENT_IMAGE_NAME }}:*" -q)
-          docker rmi $(docker images --filter=reference="${{ env.NGINX_IMAGE_NAME }}:*" -q)
+          tags: ${{ env.NGINX_IMAGE_NAME }}:${{ env.VERSION }}
 
   deploy:
-    needs: [ build, cleanup ]
+    needs: [ build ]
     name: Deploy
     runs-on: [ self-hosted ]
     steps:
@@ -116,8 +93,31 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GHP_REACT_TEST }}
-      - name: Docker run
+      - name: Pull new docker images
+        run: |
+          docker pull ${{ env.CLIENT_IMAGE_NAME }}:${{ env.VERSION }}
+          docker pull ${{ env.NGINX_IMAGE_NAME }}:${{ env.VERSION }}
+      - name: Clean up docker containers
         # container 이름을 가진 docker process 가 있다면, 해당 process 를 stop 한 후, container 를 삭제한다.
         run: |
+          docker ps -q --filter "name=${{ env.CLIENT_CONTAINER_NAME }}" | grep -q . && docker stop ${{ env.CLIENT_CONTAINER_NAME }} && docker rm -fv ${{ env.CLIENT_CONTAINER_NAME }}
+          docker ps -q --filter "name=${{ env.NGINX_CONTAINER_NAME }}" | grep -q . && docker stop ${{ env.NGINX_CONTAINER_NAME }} && docker rm -fv ${{ env.NGINX_CONTAINER_NAME }}
+      - name: Run new docker containers
+        run: |
           docker-compose up -d
+
+  cleanup:
+    needs: [ build, deploy ]
+    name: Clean up docker images
+    runs-on: [ self-hosted ]
+    steps:
+      # 생성된 이전 docker image 를 삭제한다.
+      #          docker rmi $(docker images --filter "before=${{ env.CLIENT_IMAGE_NAME }}:latest" --filter=reference="${{ env.CLIENT_IMAGE_NAME }}:*" -q)
+      #          docker rmi $(docker images --filter "before=${{ env.CLIENT_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.CLIENT_IMAGE_NAME }}:*" -q)
+      #          docker rmi $(docker images --filter "before=${{ env.NGINX_IMAGE_NAME }}:latest" --filter=reference="${{ env.NGINX_IMAGE_NAME }}:*" -q)
+      #          docker rmi $(docker images --filter "before=${{ env.NGINX_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.NGINX_IMAGE_NAME }}:*" -q)
+      - name: Clean up docker images
+        run: |
+          docker rmi $(docker images --filter=before="${{ env.CLIENT_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.CLIENT_IMAGE_NAME }}:*" -q)
+          docker rmi $(docker images --filter=before="${{ env.NGINX_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.NGINX_IMAGE_NAME }}:*" -q)
 
