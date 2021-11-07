@@ -24,6 +24,9 @@ env:
   NGINX_CONTEXT: ./nginx
 
 jobs:
+  set-docker-env:
+    run: |
+      export VERSION=${{ env.VERSION }}
   build:
     name: Build
     runs-on: ubuntu-latest
@@ -90,8 +93,8 @@ jobs:
       #          docker rmi $(docker images --filter "before=${{ env.NGINX_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.NGINX_IMAGE_NAME }}:*" -q)
       - name: Clean up docker containers
         run: |
-          docker ps -q --filter "name=${{ env.CLIENT_CONTAINER_NAME }}" | grep -v grep && docker stop ${{ env.CLIENT_CONTAINER_NAME }} && docker rm -fv ${{ env.CLIENT_CONTAINER_NAME }}
-          docker ps -q --filter "name=${{ env.NGINX_CONTAINER_NAME }}" | grep -v grep && docker stop ${{ env.NGINX_CONTAINER_NAME }} && docker rm -fv ${{ env.NGINX_CONTAINER_NAME }}
+          docker ps -q --filter "name=${{ env.CLIENT_CONTAINER_NAME }}" | grep -q . && docker stop ${{ env.CLIENT_CONTAINER_NAME }} && docker rm -fv ${{ env.CLIENT_CONTAINER_NAME }}
+          docker ps -q --filter "name=${{ env.NGINX_CONTAINER_NAME }}" | grep -q . && docker stop ${{ env.NGINX_CONTAINER_NAME }} && docker rm -fv ${{ env.NGINX_CONTAINER_NAME }}
           echo $?
 
       - name: Clean up docker images
@@ -114,7 +117,7 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GHP_REACT_TEST }}
-      - name: Clean up docker containers
+      - name: Run docker containers
         # container 이름을 가진 docker process 가 있다면, 해당 process 를 stop 한 후, container 를 삭제한다.
         run: |
           docker-compose up -d
