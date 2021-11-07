@@ -55,7 +55,7 @@ jobs:
           username: ${{ github.repository_owner }}
           # 생성한 repository secrets 값을 정의한다.
           password: ${{ secrets.GHP_REACT_TEST }}
-      - name: Client service build and push
+      - name: Client build and push
         uses: docker/build-push-action@v2
         id: client_service_build
         with:
@@ -66,7 +66,7 @@ jobs:
           # 저장된 이미지는 github 저장소가 아닌, 사용자나 조직 같은 계정 밑에서 관리된다.
           tags: |
             ${{ env.CLIENT_IMAGE_NAME }}:${{ env.VERSION }}
-      - name: Nginx service build and push
+      - name: Nginx build and push
         uses: docker/build-push-action@v2
         id: nginx_service_build
         with:
