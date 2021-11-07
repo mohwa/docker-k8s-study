@@ -24,9 +24,13 @@ env:
   NGINX_CONTEXT: ./nginx
 
 jobs:
-  set-docker-env:
-    run: |
-      export VERSION=${{ env.VERSION }}
+  docker-env:
+    name: docker env
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set docker env
+        run: |
+          export VERSION=${{ env.VERSION }}
   build:
     name: Build
     runs-on: ubuntu-latest
