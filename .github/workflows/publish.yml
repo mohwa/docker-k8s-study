@@ -106,10 +106,9 @@ jobs:
     steps:
       name: docker env
       runs-on: ubuntu-latest
-      steps:
-        - name: Set docker env
-          run: |
-            export VERSION=${{ env.VERSION }}
+      - name: Set docker env
+        run: |
+          export VERSION=${{ env.VERSION }}
       - name: Checkout source code
         uses: actions/checkout@v2
         with:
