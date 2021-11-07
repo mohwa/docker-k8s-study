@@ -24,15 +24,7 @@ env:
   NGINX_CONTEXT: ./nginx
 
 jobs:
-  docker-env:
-    name: docker env
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set docker env
-        run: |
-          export VERSION=${{ env.VERSION }}
   build:
-    needs: [ docker-env ]
     name: Build
     runs-on: ubuntu-latest
     steps:
@@ -112,6 +104,12 @@ jobs:
     name: Deploy
     runs-on: [ self-hosted ]
     steps:
+      name: docker env
+      runs-on: ubuntu-latest
+      steps:
+        - name: Set docker env
+          run: |
+            export VERSION=${{ env.VERSION }}
       - name: Checkout source code
         uses: actions/checkout@v2
         with:
