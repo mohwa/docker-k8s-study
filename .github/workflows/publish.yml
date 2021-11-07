@@ -98,6 +98,7 @@ jobs:
         run: |
           docker rmi $(docker images --filter=reference="${{ env.CLIENT_IMAGE_NAME }}:*" -q)
           docker rmi $(docker images --filter=reference="${{ env.NGINX_IMAGE_NAME }}:*" -q)
+          echo $?
 
   deploy:
     needs: [ build, cleanup ]
