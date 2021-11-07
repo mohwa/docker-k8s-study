@@ -105,9 +105,6 @@ jobs:
     name: Deploy
     runs-on: [ self-hosted ]
     steps:
-      - name: Set docker env
-        run: |
-          export VERSION=${{ env.VERSION }}
       - name: Checkout source code
         uses: actions/checkout@v2
         with:
@@ -121,5 +118,6 @@ jobs:
       - name: Run docker containers
         # container 이름을 가진 docker process 가 있다면, 해당 process 를 stop 한 후, container 를 삭제한다.
         run: |
+          export VERSION=${{ env.VERSION }}
           docker-compose up -d
 
