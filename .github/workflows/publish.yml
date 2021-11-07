@@ -104,8 +104,6 @@ jobs:
     name: Deploy
     runs-on: [ self-hosted ]
     steps:
-      name: docker env
-      runs-on: ubuntu-latest
       - name: Set docker env
         run: |
           export VERSION=${{ env.VERSION }}
