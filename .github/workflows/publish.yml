@@ -78,52 +78,8 @@ jobs:
           tags: |
             ${{ env.NGINX_IMAGE_NAME }}:${{ env.VERSION }}
 
-  cleanup:
-    needs: [ build ]
-    name: Clean up docker containers and images
-    runs-on: [ self-hosted ]
-    steps:
-      # 생성된 이전 docker image 를 삭제한다.
-      #          docker rmi $(docker images --filter "before=${{ env.CLIENT_IMAGE_NAME }}:latest" --filter=reference="${{ env.CLIENT_IMAGE_NAME }}:*" -q)
-      #          docker rmi $(docker images --filter "before=${{ env.CLIENT_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.CLIENT_IMAGE_NAME }}:*" -q)
-      #          docker rmi $(docker images --filter "before=${{ env.NGINX_IMAGE_NAME }}:latest" --filter=reference="${{ env.NGINX_IMAGE_NAME }}:*" -q)
-      #          docker rmi $(docker images --filter "before=${{ env.NGINX_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.NGINX_IMAGE_NAME }}:*" -q)
-      - name: Clean up docker containers
-        run: |
-          CLIENT_CONTAINER_ID=$(docker ps -q --filter "name=${{ env.CLIENT_CONTAINER_NAME }}")
-          NGINX_CONTAINER_ID=$(docker ps -q --filter "name=${{ env.NGINX_CONTAINER_NAME }}")
-
-          # client 컨테이너 아이디가 있다면
-          if [ -n "$CLIENT_CONTAINER_ID" ]; then
-            docker stop ${{ env.CLIENT_CONTAINER_NAME }} && docker rm -fv ${{ env.CLIENT_CONTAINER_NAME }}
-          fi
-
-          # nginx 컨테이너 아이디가 있다면
-          if [ -n "$NGINX_CONTAINER_ID" ]; then
-            docker stop ${{ env.NGINX_CONTAINER_NAME }} && docker rm -fv ${{ env.NGINX_CONTAINER_NAME }}
-          fi
-
-          echo $?
-
-      - name: Clean up docker images
-        run: |
-          CLIENT_IMAGE_ID=$(docker images --filter=reference="${{ env.CLIENT_IMAGE_NAME }}:*" -q)
-          NGINX_IMAGE_ID=$(docker images --filter=reference="${{ env.NGINX_IMAGE_NAME }}:*" -q)
-
-          # client 이미지 아이디가 있다면
-          if [ -n "$CLIENT_IMAGE_ID" ]; then
-            docker rmi -f $CLIENT_IMAGE_ID
-          fi
-
-          # nginx 이미지 아이디가 있다면
-          if [ -n "$NGINX_IMAGE_ID" ]; then
-            docker rmi -f $NGINX_IMAGE_ID
-          fi
-
-          echo $?
-
   deploy:
-    needs: [ build, cleanup ]
+    needs: [ build ]
     name: Deploy
     runs-on: [ self-hosted ]
     steps:
@@ -140,6 +96,43 @@ jobs:
       - name: Run docker containers
         # container 이름을 가진 docker process 가 있다면, 해당 process 를 stop 한 후, container 를 삭제한다.
         run: |
+          # docker-compose.yml 에서 사용될 환경 변수들을 설정한다.
           export IMAGE_VERSION=${{ env.VERSION }}
+
+          CLIENT_CONTAINER_ID=$(docker ps -q --filter "name=${{ env.CLIENT_CONTAINER_NAME }}")
+          NGINX_CONTAINER_ID=$(docker ps -q --filter "name=${{ env.NGINX_CONTAINER_NAME }}")
+
+          # client 컨테이너 아이디가 있다면
+          if [ -n "$CLIENT_CONTAINER_ID" ]; then
+            docker stop ${{ env.CLIENT_CONTAINER_NAME }} && docker rm -fv ${{ env.CLIENT_CONTAINER_NAME }}
+          fi
+
+          # nginx 컨테이너 아이디가 있다면
+          if [ -n "$NGINX_CONTAINER_ID" ]; then
+            docker stop ${{ env.NGINX_CONTAINER_NAME }} && docker rm -fv ${{ env.NGINX_CONTAINER_NAME }}
+          fi
+
           docker-compose up -d
+
+  cleanup:
+    needs: [ build, deploy ]
+    name: Clean up
+    runs-on: [ self-hosted ]
+    steps:
+      - name: Clean up docker images
+        run: |
+          BEFORE_CLIENT_IMAGE_ID=$(docker images --filter "before=${{ env.CLIENT_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.CLIENT_IMAGE_NAME }}:*" -q)
+          BEFORE_NGINX_IMAGE_ID=$(docker images --filter "before=${{ env.NGINX_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.NGINX_IMAGE_NAME }}:*" -q)
+
+          # client 이미지 아이디가 있다면
+          if [ -n "$BEFORE_CLIENT_IMAGE_ID" ]; then
+            docker rmi -f $BEFORE_CLIENT_IMAGE_ID
+          fi
+
+          # nginx 이미지 아이디가 있다면
+          if [ -n "$BEFORE_NGINX_IMAGE_ID" ]; then
+            docker rmi -f $BEFORE_NGINX_IMAGE_ID
+          fi
+
+          echo $?
 
