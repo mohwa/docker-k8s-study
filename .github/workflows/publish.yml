@@ -99,7 +99,7 @@ jobs:
           fi
 
           # nginx 컨테이너 아이디가 있다면
-          if [ -n "NGINX_CONTAINER_ID" ]; then
+          if [ -n "$NGINX_CONTAINER_ID" ]; then
             docker stop ${{ env.NGINX_CONTAINER_NAME }} && docker rm -fv ${{ env.NGINX_CONTAINER_NAME }}
           fi
 
@@ -108,16 +108,16 @@ jobs:
       - name: Clean up docker images
         run: |
           CLIENT_IMAGE_ID=$(docker images --filter=reference="${{ env.CLIENT_IMAGE_NAME }}:*" -q)
-          NGINX_IMAGE_ID=$(docker images --filter=reference="${{ env.CLIENT_IMAGE_NAME }}:*" -q)
+          NGINX_IMAGE_ID=$(docker images --filter=reference="${{ env.NGINX_IMAGE_NAME }}:*" -q)
 
           # client 이미지 아이디가 있다면
           if [ -n "$CLIENT_IMAGE_ID" ]; then
-            docker rmi CLIENT_IMAGE_ID
+            docker rmi -f $CLIENT_IMAGE_ID
           fi
 
           # nginx 이미지 아이디가 있다면
           if [ -n "$NGINX_IMAGE_ID" ]; then
-            docker rmi CLIENT_IMAGE_ID
+            docker rmi -f $NGINX_IMAGE_ID
           fi
 
           echo $?
@@ -140,6 +140,6 @@ jobs:
       - name: Run docker containers
         # container 이름을 가진 docker process 가 있다면, 해당 process 를 stop 한 후, container 를 삭제한다.
         run: |
-          export VERSION=${{ env.VERSION }}
+          export IMAGE_VERSION=${{ env.VERSION }}
           docker-compose up -d
 
