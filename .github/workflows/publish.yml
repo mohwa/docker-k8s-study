@@ -134,5 +134,8 @@ jobs:
             docker rmi -f $BEFORE_NGINX_IMAGE_ID
           fi
 
-          echo $?
+          echo ret_code: $?
+          echo before_client_image_id: $BEFORE_CLIENT_IMAGE_ID
+          echo before_nginx_image_id: $BEFORE_NGINX_IMAGE_ID
+
 
