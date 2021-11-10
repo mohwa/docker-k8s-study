@@ -16,11 +16,17 @@ env:
   # https://github.com/features/packages
   REGISTRY: ghcr.io
   CLIENT_IMAGE_NAME: ghcr.io/${{ github.repository }}-client
+  BACKEND_IMAGE_NAME: ghcr.io/${{ github.repository }}-backend
+  MYSQL_IMAGE_NAME: ghcr.io/${{ github.repository }}-mysql
   NGINX_IMAGE_NAME: ghcr.io/${{ github.repository }}-nginx
   CLIENT_CONTAINER_NAME: docker-k8s-study-client
+  BACKEND_CONTAINER_NAME: docker-k8s-study-backend
+  MYSQL_CONTAINER_NAME: docker-k8s-study-mysql
   NGINX_CONTAINER_NAME: docker-k8s-study-nginx
   VERSION: ${{ github.sha }}
   CLIENT_CONTEXT: ./client
+  BACKEND_CONTEXT: ./backend
+  MYSQL_CONTEXT: ./mysql
   NGINX_CONTEXT: ./nginx
 
 jobs:
@@ -66,6 +72,28 @@ jobs:
           # 저장된 이미지는 github 저장소가 아닌, 사용자나 조직 같은 계정 밑에서 관리된다.
           tags: |
             ${{ env.CLIENT_IMAGE_NAME }}:${{ env.VERSION }}
+      - name: Backend build and push
+        uses: docker/build-push-action@v2
+        id: backend_service_build
+        with:
+          context: ${{ env.BACKEND_CONTEXT }}
+          builder: ${{ steps.buildx.outputs.name }}
+          push: true
+          # ghcr 에 저장할 tag 이름은 ghcr.io/<OWNER>/<IMAGE-NAME> 형식을 따른다.
+          # 저장된 이미지는 github 저장소가 아닌, 사용자나 조직 같은 계정 밑에서 관리된다.
+          tags: |
+            ${{ env.BACKEND_IMAGE_NAME }}:${{ env.VERSION }}
+      - name: Mysql build and push
+        uses: docker/build-push-action@v2
+        id: backend_service_build
+        with:
+          context: ${{ env.MYSQL_CONTEXT }}
+          builder: ${{ steps.buildx.outputs.name }}
+          push: true
+          # ghcr 에 저장할 tag 이름은 ghcr.io/<OWNER>/<IMAGE-NAME> 형식을 따른다.
+          # 저장된 이미지는 github 저장소가 아닌, 사용자나 조직 같은 계정 밑에서 관리된다.
+          tags: |
+            ${{ env.MYSQL_IMAGE_NAME }}:${{ env.VERSION }}
       - name: Nginx build and push
         uses: docker/build-push-action@v2
         id: nginx_service_build
@@ -100,11 +128,23 @@ jobs:
 
           # container 이름을 가진 docker process 가 있다면, 해당 process 를 stop 한 후, container 를 삭제한다.
           CLIENT_CONTAINER_ID=$(docker ps -q --filter "name=${{ env.CLIENT_CONTAINER_NAME }}")
+          BACKEND_CONTAINER_ID=$(docker ps -q --filter "name=${{ env.BACKEND_CONTAINER_NAME }}")
+          MYSQL_CONTAINER_ID=$(docker ps -q --filter "name=${{ env.MYSQL_CONTAINER_NAME }}")
           NGINX_CONTAINER_ID=$(docker ps -q --filter "name=${{ env.NGINX_CONTAINER_NAME }}")
 
           # client 컨테이너 아이디가 있다면
           if [ -n "$CLIENT_CONTAINER_ID" ]; then
             docker stop ${{ env.CLIENT_CONTAINER_NAME }} && docker rm -fv ${{ env.CLIENT_CONTAINER_NAME }}
+          fi
+
+          # backend 컨테이너 아이디가 있다면
+          if [ -n "$BACKEND_CONTAINER_ID" ]; then
+            docker stop ${{ env.BACKEND_CONTAINER_NAME }} && docker rm -fv ${{ env.BACKEND_CONTAINER_NAME }}
+          fi
+
+          # mysql 컨테이너 아이디가 있다면
+          if [ -n "$MYSQL_CONTAINER_ID" ]; then
+            docker stop ${{ env.MYSQL_CONTAINER_NAME }} && docker rm -fv ${{ env.MYSQL_CONTAINER_NAME }}
           fi
 
           # nginx 컨테이너 아이디가 있다면
@@ -122,11 +162,23 @@ jobs:
       - name: Clean up docker images
         run: |
           BEFORE_CLIENT_IMAGE_ID=$(docker images --filter "before=${{ env.CLIENT_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.CLIENT_IMAGE_NAME }}:*" -q)
+          BEFORE_BACKEND_IMAGE_ID=$(docker images --filter "before=${{ env.BACKEND_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.BACKEND_IMAGE_NAME }}:*" -q)
+          BEFORE_MYSQL_IMAGE_ID=$(docker images --filter "before=${{ env.MYSQL_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.MYSQL_IMAGE_NAME }}:*" -q)
           BEFORE_NGINX_IMAGE_ID=$(docker images --filter "before=${{ env.NGINX_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.NGINX_IMAGE_NAME }}:*" -q)
 
           # client 이미지 아이디가 있다면
           if [ -n "$BEFORE_CLIENT_IMAGE_ID" ]; then
             docker rmi -f $BEFORE_CLIENT_IMAGE_ID
+          fi
+
+          # backend 이미지 아이디가 있다면
+          if [ -n "$BEFORE_BACKEND_IMAGE_ID" ]; then
+            docker rmi -f $BEFORE_BACKEND_IMAGE_ID
+          fi
+
+          # mysql 이미지 아이디가 있다면
+          if [ -n "$BEFORE_MYSQL_IMAGE_ID" ]; then
+            docker rmi -f $BEFORE_MYSQL_IMAGE_ID
           fi
 
           # nginx 이미지 아이디가 있다면
@@ -136,6 +188,8 @@ jobs:
 
           echo ret_code: $?
           echo before_client_image_id: $BEFORE_CLIENT_IMAGE_ID
+          echo before_backend_image_id: $BEFORE_BACKEND_IMAGE_ID
+          echo before_mysql_image_id: $BEFORE_MYSQL_IMAGE_ID
           echo before_nginx_image_id: $BEFORE_NGINX_IMAGE_ID
 
 
