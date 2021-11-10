@@ -101,6 +101,8 @@ module.exports = () => {
             historyApiFallback: {
                 index: '/index.html',
             },
+            // https://github.com/gitpod-io/gitpod/issues/26
+            allowedHosts: 'all',
         },
     };
 };

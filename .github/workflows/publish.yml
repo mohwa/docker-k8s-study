@@ -94,11 +94,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GHP_REACT_TEST }}
       - name: Run docker containers
-        # container 이름을 가진 docker process 가 있다면, 해당 process 를 stop 한 후, container 를 삭제한다.
         run: |
           # docker-compose.yml 에서 사용될 환경 변수들을 설정한다.
           export IMAGE_VERSION=${{ env.VERSION }}
 
+          # container 이름을 가진 docker process 가 있다면, 해당 process 를 stop 한 후, container 를 삭제한다.
           CLIENT_CONTAINER_ID=$(docker ps -q --filter "name=${{ env.CLIENT_CONTAINER_NAME }}")
           NGINX_CONTAINER_ID=$(docker ps -q --filter "name=${{ env.NGINX_CONTAINER_NAME }}")
 
