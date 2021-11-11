@@ -25,6 +25,12 @@ services:
       # https://ui.toast.com/weekly-pick/ko_20160823
       # 다만 client/node_modules 폴더는 매핑하지않는다.
       - /app/node_modules
+    environment:
+      MYSQL_HOST: "mysql"
+      MYSQL_PORT: 3306
+      MYSQL_ROOT_USER: "root"
+      MYSQL_ROOT_PASSWORD: "password"
+      MYSQL_DATABASE: "my_app"
   mysql:
     build:
       # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
@@ -43,9 +49,8 @@ services:
       # docker 에는 /var/lib/docker/volumes 라는 호스트 파일 시스템이 존재하고, DB 같이 영구적으로 저장해야할 데이터는 이곳에 저장한다.
       - ./mysql/mysql_data:/var/lib/mysql
       - ./mysql/sqls:/docker-entrypoint-initdb.d
-    environment:
-      MYSQL_DATABASE: "myapp"
-      MYSQL_ROOT_PASSWORD: "password"
+#    environment:
+#      MYSQL_ROOT_PASSWORD: "password"
     # init.sql 파일을 명시적으로 실행한다.(init.sql 파일이 강좌와 다르게 실행되지않아, 이 부분을 추가했다)
     command: --init-file /docker-entrypoint-initdb.d/init.sql
   nginx:

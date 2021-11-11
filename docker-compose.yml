@@ -7,6 +7,12 @@ services:
   backend:
     image: ghcr.io/mohwa/docker-k8s-study-backend:${IMAGE_VERSION}
     container_name: docker-k8s-study-backend
+    environment:
+      MYSQL_HOST: "mysql"
+      MYSQL_PORT: 3306
+      MYSQL_ROOT_USER: "root"
+      MYSQL_ROOT_PASSWORD: "password"
+      MYSQL_DATABASE: "my_app"
   mysql:
     image: ghcr.io/mohwa/docker-k8s-study-mysql:${IMAGE_VERSION}
     container_name: docker-k8s-study-mysql
@@ -22,10 +28,10 @@ services:
       - ./mysql/mysql_data:/var/lib/mysql
       - ./mysql/sqls:/docker-entrypoint-initdb.d
     # init.sql 파일을 명시적으로 실행한다.(init.sql 파일이 강좌와 다르게 실행되지않아, 이 부분을 추가했다)
-    environment:
-      MYSQL_DATABASE: "myapp"
-      MYSQL_ROOT_PASSWORD: "password"
     command: --init-file /docker-entrypoint-initdb.d/init.sql
+  #    environment:
+  #      MYSQL_DATABASE: "my_app"
+  #      MYSQL_ROOT_PASSWORD: "password"
   nginx:
     image: ghcr.io/mohwa/docker-k8s-study-nginx:${IMAGE_VERSION}
     container_name: docker-k8s-study-nginx
