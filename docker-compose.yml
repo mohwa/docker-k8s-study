@@ -30,6 +30,7 @@ services:
     # init.sql 파일을 명시적으로 실행한다.(init.sql 파일이 강좌와 다르게 실행되지않아, 이 부분을 추가했다)
     command: --init-file /docker-entrypoint-initdb.d/init.sql
     environment:
+      # 환경 변수를 통해, mysql 의 root password 를 설정한다.
       MYSQL_ROOT_PASSWORD: "password"
   nginx:
     image: ghcr.io/mohwa/docker-k8s-study-nginx:${IMAGE_VERSION}

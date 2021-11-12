@@ -125,34 +125,17 @@ jobs:
         run: |
           # docker-compose.yml 에서 사용될 환경 변수들을 설정한다.
           export IMAGE_VERSION=${{ env.VERSION }}
+          export CLIENT_CONTAINER_NAME=${{ env.CLIENT_CONTAINER_NAME }}
+          export BACKEND_CONTAINER_NAME=${{ env.BACKEND_CONTAINER_NAME }}
+          export MYSQL_CONTAINER_NAME=${{ env.MYSQL_CONTAINER_NAME }}
+          export NGINX_CONTAINER_NAME=${{ env.NGINX_CONTAINER_NAME }}
 
-          # container 이름을 가진 docker process 가 있다면, 해당 process 를 stop 한 후, container 를 삭제한다.
-          CLIENT_CONTAINER_ID=$(docker ps -q --filter "name=${{ env.CLIENT_CONTAINER_NAME }}")
-          BACKEND_CONTAINER_ID=$(docker ps -q --filter "name=${{ env.BACKEND_CONTAINER_NAME }}")
-          MYSQL_CONTAINER_ID=$(docker ps -q --filter "name=${{ env.MYSQL_CONTAINER_NAME }}")
-          NGINX_CONTAINER_ID=$(docker ps -q --filter "name=${{ env.NGINX_CONTAINER_NAME }}")
+          cd $GITHUB_WORKSPACE
+          echo pwd
 
-          # client 컨테이너 아이디가 있다면
-          if [ -n "$CLIENT_CONTAINER_ID" ]; then
-            docker stop ${{ env.CLIENT_CONTAINER_NAME }} && docker rm -fv ${{ env.CLIENT_CONTAINER_NAME }}
-          fi
+         chmod +x ./deploy.sh
 
-          # backend 컨테이너 아이디가 있다면
-          if [ -n "$BACKEND_CONTAINER_ID" ]; then
-            docker stop ${{ env.BACKEND_CONTAINER_NAME }} && docker rm -fv ${{ env.BACKEND_CONTAINER_NAME }}
-          fi
-
-          # mysql 컨테이너 아이디가 있다면
-          if [ -n "$MYSQL_CONTAINER_ID" ]; then
-            docker stop ${{ env.MYSQL_CONTAINER_NAME }} && docker rm -fv ${{ env.MYSQL_CONTAINER_NAME }}
-          fi
-
-          # nginx 컨테이너 아이디가 있다면
-          if [ -n "$NGINX_CONTAINER_ID" ]; then
-            docker stop ${{ env.NGINX_CONTAINER_NAME }} && docker rm -fv ${{ env.NGINX_CONTAINER_NAME }}
-          fi
-
-          docker-compose up -d
+         ./deploy.sh
 
   cleanup:
     needs: [ build, deploy ]
@@ -161,35 +144,16 @@ jobs:
     steps:
       - name: Clean up docker images
         run: |
-          BEFORE_CLIENT_IMAGE_ID=$(docker images --filter "before=${{ env.CLIENT_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.CLIENT_IMAGE_NAME }}:*" -q)
-          BEFORE_BACKEND_IMAGE_ID=$(docker images --filter "before=${{ env.BACKEND_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.BACKEND_IMAGE_NAME }}:*" -q)
-          BEFORE_MYSQL_IMAGE_ID=$(docker images --filter "before=${{ env.MYSQL_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.MYSQL_IMAGE_NAME }}:*" -q)
-          BEFORE_NGINX_IMAGE_ID=$(docker images --filter "before=${{ env.NGINX_IMAGE_NAME }}:${{ env.VERSION }}" --filter=reference="${{ env.NGINX_IMAGE_NAME }}:*" -q)
+          # docker-compose.yml 에서 사용될 환경 변수들을 설정한다.
+          export IMAGE_VERSION=${{ env.VERSION }}
+          export CLIENT_IMAGE_NAME=${{ env.CLIENT_IMAGE_NAME }}
+          export BACKEND_IMAGE_NAME=${{ env.BACKEND_IMAGE_NAME }}
+          export MYSQL_IMAGE_NAME=${{ env.MYSQL_IMAGE_NAME }}
+          export NGINX_IMAGE_NAME=${{ env.NGINX_IMAGE_NAME }}
 
-          # client 이미지 아이디가 있다면
-          if [ -n "$BEFORE_CLIENT_IMAGE_ID" ]; then
-            docker rmi -f $BEFORE_CLIENT_IMAGE_ID
-          fi
+          cd $GITHUB_WORKSPACE
+          echo pwd
 
-          # backend 이미지 아이디가 있다면
-          if [ -n "$BEFORE_BACKEND_IMAGE_ID" ]; then
-            docker rmi -f $BEFORE_BACKEND_IMAGE_ID
-          fi
+          chmod +x ./cleanup.sh
 
-          # mysql 이미지 아이디가 있다면
-          if [ -n "$BEFORE_MYSQL_IMAGE_ID" ]; then
-            docker rmi -f $BEFORE_MYSQL_IMAGE_ID
-          fi
-
-          # nginx 이미지 아이디가 있다면
-          if [ -n "$BEFORE_NGINX_IMAGE_ID" ]; then
-            docker rmi -f $BEFORE_NGINX_IMAGE_ID
-          fi
-
-          echo ret_code: $?
-          echo before_client_image_id: $BEFORE_CLIENT_IMAGE_ID
-          echo before_backend_image_id: $BEFORE_BACKEND_IMAGE_ID
-          echo before_mysql_image_id: $BEFORE_MYSQL_IMAGE_ID
-          echo before_nginx_image_id: $BEFORE_NGINX_IMAGE_ID
-
-
+          ./cleanup.sh
