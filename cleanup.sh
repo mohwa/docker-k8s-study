@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 function remove_image() {
   local image_name=$1
   local image_id=$(docker images --filter "before=$image_name:$IMAGE_VERSION" --filter=reference="$image_name:*" -q)

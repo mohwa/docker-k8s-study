@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 function stop_container() {
   local container_name=$1
   local container_id=$(docker ps -q --filter "name=$container_name" && echo $?)
