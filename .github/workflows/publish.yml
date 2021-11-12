@@ -135,7 +135,7 @@ jobs:
 
           chmod +x deploy.sh
 
-         ./deploy.sh
+         sh deploy.sh
 
   cleanup:
     needs: [ build, deploy ]
@@ -156,4 +156,4 @@ jobs:
 
           chmod +x cleanup.sh
 
-          ./cleanup.sh
+          sh cleanup.sh
