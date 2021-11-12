@@ -14,9 +14,9 @@ function stop_container() {
   return $result_code
 }
 
-stop_container($CLIENT_CONTAINER_NAME)
-stop_container($BACKEND_CONTAINER_NAME)
-stop_container($MYSQL_CONTAINER_NAME)
-stop_container($NGINX_CONTAINER_NAME)
+stop_container $CLIENT_CONTAINER_NAME
+stop_container $BACKEND_CONTAINER_NAME
+stop_container $MYSQL_CONTAINER_NAME
+stop_container $NGINX_CONTAINER_NAME
 
 docker-compose up -d

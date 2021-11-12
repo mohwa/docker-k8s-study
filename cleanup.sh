@@ -16,7 +16,7 @@ function remove_image() {
   return $result_code
 }
 
-remove_image($CLIENT_CONTAINER_NAME)
-remove_image($BACKEND_CONTAINER_NAME)
-remove_image($MYSQL_CONTAINER_NAME)
-remove_image($NGINX_CONTAINER_NAME)
+remove_image $CLIENT_CONTAINER_NAME
+remove_image $BACKEND_CONTAINER_NAME
+remove_image $MYSQL_CONTAINER_NAME
+remove_image $NGINX_CONTAINER_NAME

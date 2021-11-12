@@ -131,7 +131,7 @@ jobs:
           export NGINX_CONTAINER_NAME=${{ env.NGINX_CONTAINER_NAME }}
 
           cd $GITHUB_WORKSPACE
-          echo pwd
+          pwd
 
           chmod +x deploy.sh
           sh deploy.sh
@@ -151,7 +151,6 @@ jobs:
           export NGINX_IMAGE_NAME=${{ env.NGINX_IMAGE_NAME }}
 
           cd $GITHUB_WORKSPACE
-          echo pwd
 
           chmod +x cleanup.sh
           sh cleanup.sh
