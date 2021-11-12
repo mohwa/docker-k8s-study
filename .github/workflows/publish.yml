@@ -133,7 +133,7 @@ jobs:
           cd $GITHUB_WORKSPACE
           echo pwd
 
-         chmod +x ./deploy.sh
+          chmod +x ./deploy.sh
 
          ./deploy.sh
 
