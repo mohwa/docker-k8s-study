@@ -22,4 +22,8 @@ stop_container $BACKEND_CONTAINER_NAME
 stop_container $MYSQL_CONTAINER_NAME
 stop_container $NGINX_CONTAINER_NAME
 
+echo $GITHUB_WORKSPACE
+
+cd $GITHUB_WORKSPACE
+
 docker-compose up -d
