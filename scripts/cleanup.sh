@@ -10,13 +10,13 @@ function remove_image() {
 
   local result_code=$?
 
-  echo ret_code: $?
+  echo result_code: $?
   echo image_id: $image_id
 
   return $result_code
 }
 
-remove_image $CLIENT_CONTAINER_NAME
-remove_image $BACKEND_CONTAINER_NAME
-remove_image $MYSQL_CONTAINER_NAME
-remove_image $NGINX_CONTAINER_NAME
+remove_image $CLIENT_IMAGE_NAME
+remove_image $BACKEND_IMAGE_NAME
+remove_image $MYSQL_IMAGE_NAME
+remove_image $NGINX_IMAGE_NAME
