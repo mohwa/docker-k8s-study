@@ -2,7 +2,7 @@
 
 function stop_container() {
   local container_name=$1
-  local container_id=$(docker ps -q --filter "name=$container_name" && echo $?)
+  local container_id=$(docker ps -q --filter "name=$container_name")
 
   if [ -n "$container_id" ]; then
     docker stop $container_name
@@ -10,6 +10,9 @@ function stop_container() {
   fi
 
   local result_code=$?
+
+  echo result_code: $result_code
+  echo container_id: $container_id
 
   return $result_code
 }
