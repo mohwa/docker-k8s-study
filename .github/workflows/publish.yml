@@ -130,8 +130,8 @@ jobs:
           export MYSQL_CONTAINER_NAME=${{ env.MYSQL_CONTAINER_NAME }}
           export NGINX_CONTAINER_NAME=${{ env.NGINX_CONTAINER_NAME }}
 
-          cd $GITHUB_WORKSPACE
-          pwd
+          # scripts path 에 진입한다.
+          cd $GITHUB_WORKSPACE/scripts
 
           chmod +x deploy.sh
           sh deploy.sh
@@ -150,7 +150,8 @@ jobs:
           export MYSQL_IMAGE_NAME=${{ env.MYSQL_IMAGE_NAME }}
           export NGINX_IMAGE_NAME=${{ env.NGINX_IMAGE_NAME }}
 
-          cd $GITHUB_WORKSPACE
+          # scripts path 에 진입한다.
+          cd $GITHUB_WORKSPACE/scripts
 
           chmod +x cleanup.sh
           sh cleanup.sh
