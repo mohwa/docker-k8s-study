@@ -3,10 +3,10 @@ version: "3"
 services:
   client:
     image: ghcr.io/mohwa/docker-k8s-study-client:${IMAGE_VERSION}
-    container_name: docker-k8s-study-client
+    container_name: docker-k8s-study-client-prod
   backend:
     image: ghcr.io/mohwa/docker-k8s-study-backend:${IMAGE_VERSION}
-    container_name: docker-k8s-study-backend
+    container_name: docker-k8s-study-backend-prod
     environment:
       MYSQL_HOST: "mysql"
       MYSQL_PORT: 3306
@@ -15,7 +15,7 @@ services:
       MYSQL_DATABASE: "my_app"
   mysql:
     image: ghcr.io/mohwa/docker-k8s-study-mysql:${IMAGE_VERSION}
-    container_name: docker-k8s-study-mysql
+    container_name: docker-k8s-study-mysql-prod
     restart: unless-stopped
     ports:
       - "3306:3306"
@@ -34,7 +34,7 @@ services:
       MYSQL_ROOT_PASSWORD: "password"
   nginx:
     image: ghcr.io/mohwa/docker-k8s-study-nginx:${IMAGE_VERSION}
-    container_name: docker-k8s-study-nginx
+    container_name: docker-k8s-study-nginx-prod
     restart: always
     ports:
       - "3001:80"
