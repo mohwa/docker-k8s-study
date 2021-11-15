@@ -12,7 +12,6 @@ services:
       # https://ui.toast.com/weekly-pick/ko_20160823
       # 다만 client/node_modules 폴더는 매핑하지않는다.
       - /app/node_modules
-#    stdin_open: true
   backend:
     build:
       # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
@@ -40,7 +39,7 @@ services:
     # 개발자가 임의로 멈추려고할때 빼고는 항상 재시작한다.
     restart: unless-stopped
     ports:
-      - "3306:3306"
+      - "3001:3306"
     volumes:
       # 배포 시, 이전 컨테이너를 지우더라도 DB 에 저장된 자료를 지워지지않게해주는 volumes 설정이다.
       # 원래는 컨테이너를 삭제하면, 해당 컨테이너에 저장된 DB 는 지워지게됩니다.

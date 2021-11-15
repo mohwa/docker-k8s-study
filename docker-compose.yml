@@ -3,10 +3,10 @@ version: "3"
 services:
   client:
     image: ghcr.io/mohwa/docker-k8s-study-client:${IMAGE_VERSION}
-    container_name: docker-k8s-study-client-prod
+    container_name: docker-k8s-study-client
   backend:
     image: ghcr.io/mohwa/docker-k8s-study-backend:${IMAGE_VERSION}
-    container_name: docker-k8s-study-backend-prod
+    container_name: docker-k8s-study-backend
     environment:
       MYSQL_HOST: "mysql"
       MYSQL_PORT: 3306
@@ -15,13 +15,13 @@ services:
       MYSQL_DATABASE: "my_app"
   mysql:
     image: ghcr.io/mohwa/docker-k8s-study-mysql:${IMAGE_VERSION}
-    container_name: docker-k8s-study-mysql-prod
+    container_name: docker-k8s-study-mysql
     restart: unless-stopped
     ports:
-      - "3306:3306"
+      - "3003:3306"
     volumes:
       # 배포 시, 이전 컨테이너를 지우더라도 DB 에 저장된 자료를 지워지지않게해주는 volumes 설정이다.
-      # 원래는 컨테이너를 삭제하면, 해당 컨테이너에 저장된 D  B 는 지워지게됩니다.
+      # 원래는 컨테이너를 삭제하면, 해당 컨테이너에 저장된 DB 는 지워지게됩니다.
 
       # 이미지로 컨테이너를 생성하면, 해당 이미지는 "읽기 전용"으로 변경된다.
       # docker 에는 /var/lib/docker/volumes 라는 호스트 파일 시스템이 존재하고, DB 같이 영구적으로 저장해야할 데이터는 이곳에 저장한다.
@@ -34,7 +34,7 @@ services:
       MYSQL_ROOT_PASSWORD: "password"
   nginx:
     image: ghcr.io/mohwa/docker-k8s-study-nginx:${IMAGE_VERSION}
-    container_name: docker-k8s-study-nginx-prod
+    container_name: docker-k8s-study-nginx
     restart: always
     ports:
-      - "3001:80"
+      - "3002:80"
