@@ -23,9 +23,7 @@ stop_container $BACKEND_CONTAINER_NAME
 stop_container $MYSQL_CONTAINER_NAME
 stop_container $NGINX_CONTAINER_NAME
 
-echo $GITHUB_WORKSPACE
-echo $(pwd)
-
+# workspace root path 로 이동한다.
 cd $GITHUB_WORKSPACE
 
-docker-compose -f docker-compose.yml up -d
+docker-compose -f ./docker-compose.yml up -d
