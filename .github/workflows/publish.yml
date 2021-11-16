@@ -130,13 +130,10 @@ jobs:
           export MYSQL_CONTAINER_NAME=${{ env.MYSQL_CONTAINER_NAME }}
           export NGINX_CONTAINER_NAME=${{ env.NGINX_CONTAINER_NAME }}
 
-#          cd $GITHUB_WORKSPACE/scripts
-
           chmod +x scripts/deploy.sh
           sh scripts/deploy.sh
 
           # workspace root path 로 이동한다.
-#          cd $GITHUB_WORKSPACE
           docker-compose -f up -d
 
   cleanup:
