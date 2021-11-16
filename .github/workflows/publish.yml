@@ -12,6 +12,8 @@ on:
 # https://github.com/users/mohwa/packages/container/package/mohwa%2Fdocker-k8s-study
 
 env:
+  # https://goodcopy.tistory.com/161
+  COMPOSE_HTTP_TIMEOUT: 200
   # ghcr: github container registry(개별 docker registry 로도 사용할 수 있다)
   # https://github.com/features/packages
   REGISTRY: ghcr.io
@@ -135,6 +137,8 @@ jobs:
 
           # workspace root path 로 이동한다.
           docker-compose -f docker-compose.yml up -d
+
+          echo $?
 
   cleanup:
     needs: [ build, deploy ]
