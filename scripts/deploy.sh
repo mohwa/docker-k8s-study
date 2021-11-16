@@ -24,7 +24,8 @@ stop_container $MYSQL_CONTAINER_NAME
 stop_container $NGINX_CONTAINER_NAME
 
 echo $GITHUB_WORKSPACE
+echo $(pwd)
 
 cd $GITHUB_WORKSPACE
 
-docker-compose up -d
+docker-compose -f docker-compose.yml up -d
