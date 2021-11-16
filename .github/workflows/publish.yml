@@ -134,7 +134,7 @@ jobs:
           sh scripts/deploy.sh
 
           # workspace root path 로 이동한다.
-          docker-compose -f up -d
+          docker-compose up -d
 
   cleanup:
     needs: [ build, deploy ]
