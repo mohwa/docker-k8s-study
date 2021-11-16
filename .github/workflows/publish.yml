@@ -135,12 +135,6 @@ jobs:
 
           chmod +x scripts/deploy.sh
           sh scripts/deploy.sh
-
-          # workspace root path 로 이동한다.
-          docker-compose -f docker-compose.yml up -d
-
-          echo $?
-
   cleanup:
     needs: [ build, deploy ]
     name: Clean up
