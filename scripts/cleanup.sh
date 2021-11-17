@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source ./utils.sh
+source utils.sh
 
 remove_image $CLIENT_IMAGE_NAME $IMAGE_VERSION
 remove_image $BACKEND_IMAGE_NAME $IMAGE_VERSION
