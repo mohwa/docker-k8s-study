@@ -27,8 +27,6 @@ services:
       # docker 에는 /var/lib/ 라는 호스트 파일 시스템이 존재하고, DB 같이 영구적으로 저장해야할 데이터는 이곳에 저장한다.
       - ./mysql/mysql_data:/var/lib/mysql
       - ./mysql/sqls:/docker-entrypoint-initdb.d
-    # init.sql 파일을 명시적으로 실행한다.(init.sql 파일이 강좌와 다르게 자동으로 실행되지않아, 이 부분을 추가했다)
-#    command: --init-file /docker-entrypoint-initdb.d/init.sql
     environment:
       # 환경 변수를 통해, mysql 의 root password 를 설정한다.
       MYSQL_ROOT_PASSWORD: "password"
