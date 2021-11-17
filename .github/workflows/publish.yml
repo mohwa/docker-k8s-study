@@ -135,7 +135,7 @@ jobs:
 
           # chmod +x scripts/deploy.sh
           # sh scripts/deploy.sh
-          docker-compose -f ./docker-compose.yml up -d --force-recreate
+          docker-compose -p prod up --force-recreate -d
   cleanup:
     needs: [ build, deploy ]
     name: Clean up
