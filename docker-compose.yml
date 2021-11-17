@@ -12,7 +12,7 @@ services:
       MYSQL_PORT: 3306
       MYSQL_ROOT_USER: "root"
       MYSQL_ROOT_PASSWORD: "password"
-      MYSQL_DATABASE: "my_app_1"
+      MYSQL_DATABASE: "my_app"
   mysql:
     image: ghcr.io/mohwa/docker-k8s-study-mysql:${IMAGE_VERSION}
     container_name: docker-k8s-study-mysql

@@ -1,6 +1,6 @@
 version: "3"
 services:
-  client:
+  client_dev:
     build:
       # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
       context: ./client
@@ -12,7 +12,7 @@ services:
       # https://ui.toast.com/weekly-pick/ko_20160823
       # 다만 client/node_modules 폴더는 매핑하지않는다.
       - /app/node_modules
-  backend:
+  backend_dev:
     build:
       # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
       context: ./backend
@@ -30,7 +30,7 @@ services:
       MYSQL_ROOT_USER: "root"
       MYSQL_ROOT_PASSWORD: "password"
       MYSQL_DATABASE: "my_app"
-  mysql:
+  mysql_dev:
     build:
       # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
       context: ./mysql
@@ -53,7 +53,7 @@ services:
     environment:
       # 환경 변수를 통해, mysql 의 root password 를 설정한다.
       MYSQL_ROOT_PASSWORD: "password"
-  nginx:
+  nginx_dev:
     build:
       # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
       context: ./nginx
