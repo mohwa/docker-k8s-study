@@ -10,4 +10,4 @@ source $GITHUB_WORKSPACE/scripts/utils.sh
 # workspace root path 로 이동한다.
 cd $GITHUB_WORKSPACE
 
-docker-compose -f ./docker-compose.yml -p prod up --force-recreate -d
+docker-compose -f ./docker-compose.yml -p production up --force-recreate -d
