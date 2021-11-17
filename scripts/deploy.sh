@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source utils.sh
+source $GITHUB_WORKSPACE/scripts/utils.sh
 
 stop_container $CLIENT_CONTAINER_NAME
 stop_container $BACKEND_CONTAINER_NAME
