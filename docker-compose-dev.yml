@@ -9,7 +9,7 @@ services:
       # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
       context: ./client
       dockerfile: Dockerfile.dev
-    container_name: docker-k8s-study-client
+    container_name: docker-k8s-study-client-dev
     volumes:
       # client 폴더안의 모든 파일 or 폴더들을 매핑한다.
       - ./client:/app
@@ -21,7 +21,7 @@ services:
       # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
       context: ./backend
       dockerfile: Dockerfile.dev
-    container_name: docker-k8s-study-backend
+    container_name: docker-k8s-study-backend-dev
     volumes:
       # client 폴더안의 모든 파일 or 폴더들을 매핑한다.
       - ./backend:/app
@@ -39,7 +39,7 @@ services:
       # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
       context: ./mysql
       dockerfile: Dockerfile
-    container_name: docker-k8s-study-mysql
+    container_name: docker-k8s-study-mysql-dev
     # 개발자가 임의로 멈추려고할때 빼고는 항상 재시작한다.
     restart: unless-stopped
     ports:
@@ -59,8 +59,8 @@ services:
     build:
       # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
       context: ./nginx
-      dockerfile: Dockerfile.dev
-    container_name: docker-k8s-study-nginx
+      dockerfile: Dockerfile
+    container_name: docker-k8s-study-nginx-dev
     restart: always
     ports:
       - "3000:80"

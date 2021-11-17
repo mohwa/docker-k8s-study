@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+source ./utils.sh
+
+stop_container docker-k8s-study-client-dev
+stop_container docker-k8s-study-backend-dev
+stop_container docker-k8s-study-mysql-dev
+stop_container docker-k8s-study-nginx-dev
+
 # docker-compose-dev.yml 파일이 존재하는 곳으로 이동한다.
 # $(dirname $0): 실행된 sh 파일의 상대 디렉토리(root 디렉토리에서 실행된 경우, ./scirpts 경로가 반환된다)
 BASE_PATH=$(cd $(dirname $0) && pwd)
@@ -27,4 +34,9 @@ else
 
    echo $COMMAND && eval $COMMAND
 fi
+
+remove_image dev_client latest
+remove_image dev_backend latest
+remove_image dev_mysql latest
+remove_image dev_nginx latest
 
