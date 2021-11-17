@@ -46,7 +46,7 @@ services:
 
       # 이미지로 컨테이너를 생성하면, 해당 이미지는 "읽기 전용"으로 변경된다.
       # docker 에는 /var/lib/docker/volumes 라는 호스트 파일 시스템이 존재하고, DB 같이 영구적으로 저장해야할 데이터는 이곳에 저장한다.
-      - ./mysql/mysql_data:/var/lib/mysql
+      - ./mysql/mysql_data:/var/lib/mysql_dev
       - ./mysql/sqls:/docker-entrypoint-initdb.d
     environment:
       # 환경 변수를 통해, mysql 의 root password 를 설정한다.
