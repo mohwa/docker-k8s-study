@@ -127,7 +127,7 @@ jobs:
       - name: Run docker containers
         run: |
           # docker-compose.yml 에서 사용될 환경 변수들을 설정한다.
-          # export IMAGE_VERSION=${{ env.VERSION }}
+          export IMAGE_VERSION=${{ env.VERSION }}
           # export CLIENT_CONTAINER_NAME=${{ env.CLIENT_CONTAINER_NAME }}
           # export BACKEND_CONTAINER_NAME=${{ env.BACKEND_CONTAINER_NAME }}
           # export MYSQL_CONTAINER_NAME=${{ env.MYSQL_CONTAINER_NAME }}
