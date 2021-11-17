@@ -1,3 +1,4 @@
 # Dependency directories
 .dockerignore
 Dockerfile
+mysql_data

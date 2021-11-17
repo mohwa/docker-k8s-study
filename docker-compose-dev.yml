@@ -1,23 +1,23 @@
 version: "3"
 services:
-  client_dev:
+  client:
     build:
       # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
       context: ./client
       dockerfile: Dockerfile.dev
-    container_name: client-dev
+    container_name: docker-k8s-study-client-dev
     volumes:
       # client 폴더안의 모든 파일 or 폴더들을 매핑한다.
       - ./client:/app
       # https://ui.toast.com/weekly-pick/ko_20160823
       # 다만 client/node_modules 폴더는 매핑하지않는다.
       - /app/node_modules
-  backend_dev:
+  backend:
     build:
       # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
       context: ./backend
       dockerfile: Dockerfile.dev
-    container_name: backend-dev
+    container_name: docker-k8s-study-backend-dev
     volumes:
       # client 폴더안의 모든 파일 or 폴더들을 매핑한다.
       - ./backend:/app
@@ -30,12 +30,12 @@ services:
       MYSQL_ROOT_USER: "root"
       MYSQL_ROOT_PASSWORD: "password"
       MYSQL_DATABASE: "my_app"
-  mysql_dev:
+  mysql:
     build:
       # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
       context: ./mysql
       dockerfile: Dockerfile
-    container_name: mysql-dev
+    container_name: docker-k8s-study-mysql-dev
     # 개발자가 임의로 멈추려고할때 빼고는 항상 재시작한다.
     restart: unless-stopped
     ports:
@@ -49,16 +49,16 @@ services:
       - ./mysql/mysql_data:/var/lib/mysql
       - ./mysql/sqls:/docker-entrypoint-initdb.d
     # init.sql 파일을 명시적으로 실행한다.(init.sql 파일이 강좌와 다르게 실행되지않아, 이 부분을 추가했다)
-    command: --init-file /docker-entrypoint-initdb.d/init.sql
+#    command: --init-file /docker-entrypoint-initdb.d/init.sql
     environment:
       # 환경 변수를 통해, mysql 의 root password 를 설정한다.
       MYSQL_ROOT_PASSWORD: "password"
-  nginx_dev:
+  nginx:
     build:
       # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
       context: ./nginx
       dockerfile: Dockerfile
-    container_name: nginx-dev
+    container_name: docker-k8s-study-nginx-dev
     restart: always
     ports:
       - "3000:80"

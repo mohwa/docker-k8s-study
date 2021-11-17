@@ -126,15 +126,16 @@ jobs:
           password: ${{ secrets.GHP_REACT_TEST }}
       - name: Run docker containers
         run: |
-          # docker-compose.yml 에서 사용될 환경 변수들을 설정한다.
-          export IMAGE_VERSION=${{ env.VERSION }}
-          export CLIENT_CONTAINER_NAME=${{ env.CLIENT_CONTAINER_NAME }}
-          export BACKEND_CONTAINER_NAME=${{ env.BACKEND_CONTAINER_NAME }}
-          export MYSQL_CONTAINER_NAME=${{ env.MYSQL_CONTAINER_NAME }}
-          export NGINX_CONTAINER_NAME=${{ env.NGINX_CONTAINER_NAME }}
+#          docker-compose.yml 에서 사용될 환경 변수들을 설정한다.
+#          export IMAGE_VERSION=${{ env.VERSION }}
+#          export CLIENT_CONTAINER_NAME=${{ env.CLIENT_CONTAINER_NAME }}
+#          export BACKEND_CONTAINER_NAME=${{ env.BACKEND_CONTAINER_NAME }}
+#          export MYSQL_CONTAINER_NAME=${{ env.MYSQL_CONTAINER_NAME }}
+#          export NGINX_CONTAINER_NAME=${{ env.NGINX_CONTAINER_NAME }}
 
-          chmod +x scripts/deploy.sh
-          sh scripts/deploy.sh
+#          chmod +x scripts/deploy.sh
+#          sh scripts/deploy.sh
+          docker-compose -f ./docker-compose.yml up -d --force-recreate
   cleanup:
     needs: [ build, deploy ]
     name: Clean up
@@ -149,8 +150,5 @@ jobs:
           export MYSQL_IMAGE_NAME=${{ env.MYSQL_IMAGE_NAME }}
           export NGINX_IMAGE_NAME=${{ env.NGINX_IMAGE_NAME }}
 
-          # scripts path 에 진입한다.
-          cd $GITHUB_WORKSPACE/scripts
-
-          chmod +x cleanup.sh
-          sh cleanup.sh
+          chmod +x scripts/cleanup.sh
+          sh scripts/cleanup.sh

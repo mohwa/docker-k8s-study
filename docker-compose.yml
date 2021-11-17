@@ -12,7 +12,7 @@ services:
       MYSQL_PORT: 3306
       MYSQL_ROOT_USER: "root"
       MYSQL_ROOT_PASSWORD: "password"
-      MYSQL_DATABASE: "my_app"
+      MYSQL_DATABASE: "my_app_1"
   mysql:
     image: ghcr.io/mohwa/docker-k8s-study-mysql:${IMAGE_VERSION}
     container_name: docker-k8s-study-mysql
@@ -20,15 +20,15 @@ services:
     ports:
       - "3003:3306"
     volumes:
-      # 배포 시, 이전 컨테이너를 지우더라도 DB 에 저장된 자료를 지워지지않게해주는 volumes 설정이다.
+      # 배포 시, 이전 버전의 컨테이너를 지우더라도 DB 에 저장된 자료를 지워지지않게해주는 volumes 설정이다.
       # 원래는 컨테이너를 삭제하면, 해당 컨테이너에 저장된 DB 는 지워지게됩니다.
 
       # 이미지로 컨테이너를 생성하면, 해당 이미지는 "읽기 전용"으로 변경된다.
-      # docker 에는 /var/lib/docker/volumes 라는 호스트 파일 시스템이 존재하고, DB 같이 영구적으로 저장해야할 데이터는 이곳에 저장한다.
-      - ./mysql/mysql_data:/var/lib/mysql2
+      # docker 에는 /var/lib/ 라는 호스트 파일 시스템이 존재하고, DB 같이 영구적으로 저장해야할 데이터는 이곳에 저장한다.
+      - ./mysql/mysql_data:/var/lib/mysql
       - ./mysql/sqls:/docker-entrypoint-initdb.d
-    # init.sql 파일을 명시적으로 실행한다.(init.sql 파일이 강좌와 다르게 실행되지않아, 이 부분을 추가했다)
-    command: --init-file /docker-entrypoint-initdb.d/init.sql
+    # init.sql 파일을 명시적으로 실행한다.(init.sql 파일이 강좌와 다르게 자동으로 실행되지않아, 이 부분을 추가했다)
+#    command: --init-file /docker-entrypoint-initdb.d/init.sql
     environment:
       # 환경 변수를 통해, mysql 의 root password 를 설정한다.
       MYSQL_ROOT_PASSWORD: "password"

@@ -5,7 +5,7 @@
 BASE_PATH=$(cd $(dirname $0) && pwd)
 EXEC_PATH=$(cd $BASE_PATH/.. && pwd)
 
-COMMAND="cd $EXEC_PATH && docker-compose -f docker-compose-dev.yml up -d"
+COMMAND="cd $EXEC_PATH && docker-compose -f docker-compose-dev.yml up --force-recreate -d"
 
 if [[ "$#" -ge 1 ]]; then
   while (("$#")); do

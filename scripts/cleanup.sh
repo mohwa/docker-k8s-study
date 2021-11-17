@@ -1,4 +1,4 @@
-  #!/usr/bin/env bash
+#!/usr/bin/env bash
 
 function remove_image() {
   local image_name=$1

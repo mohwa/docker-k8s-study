@@ -26,5 +26,4 @@ function stop_container() {
 # workspace root path 로 이동한다.
 cd $GITHUB_WORKSPACE
 
-#docker-compose -f ./docker-compose.yml up -d --no-recreate
-docker-compose -f ./docker-compose.yml up -d
+docker-compose -f ./docker-compose.yml up -d --force-recreate
