@@ -4,9 +4,13 @@ services:
   client:
     image: ghcr.io/mohwa/docker-k8s-study-client:${IMAGE_VERSION}
     container_name: docker-k8s-study-client
+    networks:
+      - prod_net
   backend:
     image: ghcr.io/mohwa/docker-k8s-study-backend:${IMAGE_VERSION}
     container_name: docker-k8s-study-backend
+    networks:
+      - prod_net
     environment:
       MYSQL_HOST: "mysql"
       MYSQL_PORT: 3306
@@ -27,6 +31,8 @@ services:
       # docker 에는 /var/lib/ 라는 호스트 파일 시스템이 존재하고, DB 같이 영구적으로 저장해야할 데이터는 이곳에 저장한다.
       - ./mysql/mysql_data:/var/lib/mysql
       - ./mysql/sqls:/docker-entrypoint-initdb.d
+    networks:
+      - prod_net
     environment:
       # 환경 변수를 통해, mysql 의 root password 를 설정한다.
       MYSQL_ROOT_PASSWORD: "password"
@@ -36,3 +42,8 @@ services:
     restart: always
     ports:
       - "3002:80"
+    networks:
+      - prod_net
+networks:
+  prod_net:
+    driver: bridge
