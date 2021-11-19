@@ -4,7 +4,7 @@ services:
   # 즉 prod 환경과 dev 환경은 각기 다른 service 이름들을 가져야, 개별 프로세스로 관리할 수 있다.
   # prod: 예: client
   # dev: 예: client_dev
-  client:
+  client_dev:
     build:
       # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
       context: ./client
@@ -18,7 +18,7 @@ services:
       - /app/node_modules
     networks:
       - dev_net
-  backend:
+  backend_dev:
     build:
       # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
       context: ./backend
@@ -38,7 +38,7 @@ services:
       MYSQL_ROOT_USER: "root"
       MYSQL_ROOT_PASSWORD: "password"
       MYSQL_DATABASE: "my_app"
-  mysql:
+  mysql_dev:
     build:
       # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
       context: ./mysql
@@ -61,7 +61,7 @@ services:
     environment:
       # 환경 변수를 통해, mysql 의 root password 를 설정한다.
       MYSQL_ROOT_PASSWORD: "password"
-  nginx:
+  nginx_dev:
     build:
       # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
       context: ./nginx
