@@ -13,7 +13,7 @@ stop_container docker-k8s-study-mysql-dev
 stop_container docker-k8s-study-nginx-dev
 
 #COMMAND="cd $EXEC_PATH && docker-compose -f docker-compose-dev.yml -p dev up --force-recreate -d"
-COMMAND="cd $EXEC_PATH && docker-compose -f docker-compose-dev.yml up --force-recreate -d"
+COMMAND="cd $EXEC_PATH && docker-compose -f docker-compose-dev.yml up -d"
 
 if [[ "$#" -ge 1 ]]; then
   while (("$#")); do

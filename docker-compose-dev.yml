@@ -33,7 +33,7 @@ services:
     networks:
       - dev_net
     environment:
-      MYSQL_HOST: "mysql"
+      MYSQL_HOST: "mysql_dev"
       MYSQL_PORT: 3306
       MYSQL_ROOT_USER: "root"
       MYSQL_ROOT_PASSWORD: "password"
@@ -65,7 +65,7 @@ services:
     build:
       # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
       context: ./nginx
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: docker-k8s-study-nginx-dev
     restart: always
     ports:
