@@ -12,4 +12,4 @@ stop_container $NGINX_CONTAINER_NAME
 cd $GITHUB_WORKSPACE
 
 # docker-compose -p prod up --force-recreate -d
-docker-compose up --force-recreate -d
+docker-compose up -d
