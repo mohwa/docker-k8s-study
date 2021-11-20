@@ -1,38 +1,49 @@
 version: "3"
 services:
-  client:
+  # docker-compose 는 service (이름)를 기준으로 각 프로세스들을 관리한다.
+  # 즉 prod 환경과 dev 환경은 각기 다른 service 이름들을 가져야, 개별 프로세스로 관리할 수 있다.
+  # prod: 예: client
+  # dev: 예: client_dev
+  client_dev:
     build:
       # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
       context: ./client
       dockerfile: Dockerfile.dev
+    container_name: docker-k8s-study-client-dev
     volumes:
       # client 폴더안의 모든 파일 or 폴더들을 매핑한다.
       - ./client:/app
       # https://ui.toast.com/weekly-pick/ko_20160823
       # 다만 client/node_modules 폴더는 매핑하지않는다.
       - /app/node_modules
-  backend:
+    networks:
+      - dev_net
+  backend_dev:
     build:
       # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
       context: ./backend
       dockerfile: Dockerfile.dev
+    container_name: docker-k8s-study-backend-dev
     volumes:
       # client 폴더안의 모든 파일 or 폴더들을 매핑한다.
       - ./backend:/app
       # https://ui.toast.com/weekly-pick/ko_20160823
       # 다만 client/node_modules 폴더는 매핑하지않는다.
       - /app/node_modules
+    networks:
+      - dev_net
     environment:
       MYSQL_HOST: "mysql_dev"
       MYSQL_PORT: 3306
       MYSQL_ROOT_USER: "root"
       MYSQL_ROOT_PASSWORD: "password"
       MYSQL_DATABASE: "my_app"
-  mysql:
+  mysql_dev:
     build:
       # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
       context: ./mysql
       dockerfile: Dockerfile
+    container_name: docker-k8s-study-mysql-dev
     # 개발자가 임의로 멈추려고할때 빼고는 항상 재시작한다.
     restart: unless-stopped
     ports:
@@ -45,14 +56,22 @@ services:
       # docker 에는 /var/lib/docker/volumes 라는 호스트 파일 시스템이 존재하고, DB 같이 영구적으로 저장해야할 데이터는 이곳에 저장한다.
       - ./mysql/mysql_data:/var/lib/mysql
       - ./mysql/sqls:/docker-entrypoint-initdb.d
+    networks:
+      - dev_net
     environment:
       # 환경 변수를 통해, mysql 의 root password 를 설정한다.
       MYSQL_ROOT_PASSWORD: "password"
-  nginx:
+  nginx_dev:
     build:
       # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
       context: ./nginx
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
+    container_name: docker-k8s-study-nginx-dev
     restart: always
     ports:
       - "3000:80"
+    networks:
+      - dev_net
+networks:
+  dev_net:
+    driver: bridge
