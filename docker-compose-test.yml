@@ -3,14 +3,12 @@ version: "3"
 services:
   client:
     image: ghcr.io/mohwa/docker-k8s-study-client:${IMAGE_VERSION}
-    container_name: docker-k8s-study-client
     networks:
-      - prod_net
+      - prod
   backend:
     image: ghcr.io/mohwa/docker-k8s-study-backend:${IMAGE_VERSION}
-    container_name: docker-k8s-study-backend
     networks:
-      - prod_net
+      - prod
     environment:
       MYSQL_HOST: "mysql"
       MYSQL_PORT: 3306
@@ -19,7 +17,6 @@ services:
       MYSQL_DATABASE: "my_app"
   mysql:
     image: ghcr.io/mohwa/docker-k8s-study-mysql:${IMAGE_VERSION}
-    container_name: docker-k8s-study-mysql
     restart: unless-stopped
     ports:
       - "3003:3306"
@@ -32,18 +29,17 @@ services:
       - ./mysql/mysql_data:/var/lib/mysql
       - ./mysql/sqls:/docker-entrypoint-initdb.d
     networks:
-      - prod_net
+      - prod
     environment:
       # 환경 변수를 통해, mysql 의 root password 를 설정한다.
       MYSQL_ROOT_PASSWORD: "password"
   nginx:
     image: ghcr.io/mohwa/docker-k8s-study-nginx:${IMAGE_VERSION}
-    container_name: docker-k8s-study-nginx
     restart: always
     ports:
       - "3002:80"
     networks:
-      - prod_net
+      - prod
 networks:
-  prod_net:
+  prod:
     driver: bridge

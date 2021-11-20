@@ -11,5 +11,5 @@ stop_container $NGINX_CONTAINER_NAME
 # workspace root path 로 이동한다.
 cd $GITHUB_WORKSPACE
 
- docker-compose -p prod up -d
-#docker-compose up -d
+# docker-compose -p prod up -d
+docker-compose -f docker-compose-test.yml up -d
