@@ -12,26 +12,20 @@ on:
 # https://github.com/users/mohwa/packages/container/package/mohwa%2Fdocker-k8s-study
 
 env:
-  # https://github.com/docker/compose/issues/3927
-  DOCKER_CLIENT_TIMEOUT: 120
-  COMPOSE_HTTP_TIMEOUT: 120
   # ghcr: github container registry(개별 docker registry 로도 사용할 수 있다)
   # https://github.com/features/packages
   REGISTRY: ghcr.io
-  CLIENT_IMAGE_NAME: ghcr.io/${{ github.repository }}-client
-  BACKEND_IMAGE_NAME: ghcr.io/${{ github.repository }}-backend
-  MYSQL_IMAGE_NAME: ghcr.io/${{ github.repository }}-mysql
-  NGINX_IMAGE_NAME: ghcr.io/${{ github.repository }}-nginx
-  CLIENT_CONTAINER_NAME: docker-k8s-study-client
-  BACKEND_CONTAINER_NAME: docker-k8s-study-backend
-  MYSQL_CONTAINER_NAME: docker-k8s-study-mysql
-  NGINX_CONTAINER_NAME: docker-k8s-study-nginx
-  VERSION: ${{ github.sha }}
-  CLIENT_CONTEXT: ./client
-  BACKEND_CONTEXT: ./backend
-  MYSQL_CONTEXT: ./mysql
-  NGINX_CONTEXT: ./nginx
+  CLIENT_IMAGE_NAME: ghcr.io/${{ github.repository }}-client:${{ github.sha }}
+  BACKEND_IMAGE_NAME: ghcr.io/${{ github.repository }}-backend:${{ github.sha }}
+  MYSQL_IMAGE_NAME: ghcr.io/${{ github.repository }}-mysql:${{ github.sha }}
+  NGINX_IMAGE_NAME: ghcr.io/${{ github.repository }}-nginx:${{ github.sha }}
 
+  CLIENT_CONTAINER_NAME: ${{ github.repository }}-client
+  BACKEND_CONTAINER_NAME: ${{ github.repository }}-backend
+  MYSQL_CONTAINER_NAME: ${{ github.repository }}-mysql
+  NGINX_CONTAINER_NAME: ${{ github.repository }}-nginx
+
+  VERSION: ${{ github.sha }}
 jobs:
   build:
     name: Build
@@ -41,7 +35,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: feature/docker-react-test
-        # docker buildx: 여러 플랫폼(또는 아키텍쳐)(linux/amd64, linux/arm64, linux/ppc64le, linux/s390x, linux/386 등)으로 빌드하는 기능 등을 포함한 CLI 확장 플러그인이다.
+        # docker buildx: 여러 플랫폼(또는 아키텍쳐)(linux/amd64, linux/arm64, linux/ppc64le, linux/s390x, linux/386 등)으로 빌드하는 기능 등을 포함한 cli 확장 플러그인이다.
         # https://meetup.toast.com/posts/255
         # https://github.com/docker/setup-buildx-action
       - name: Set up docker buildx
@@ -66,48 +60,48 @@ jobs:
           password: ${{ secrets.GHP_REACT_TEST }}
       - name: Client build and push
         uses: docker/build-push-action@v2
-        id: client_service_build
+        id: client_build
         with:
-          context: ${{ env.CLIENT_CONTEXT }}
+          context: ./client
           builder: ${{ steps.buildx.outputs.name }}
           push: true
           # ghcr 에 저장할 tag 이름은 ghcr.io/<OWNER>/<IMAGE-NAME> 형식을 따른다.
           # 저장된 이미지는 github 저장소가 아닌, 사용자나 조직 같은 계정 밑에서 관리된다.
           tags: |
-            ${{ env.CLIENT_IMAGE_NAME }}:${{ env.VERSION }}
+            ${{ env.CLIENT_IMAGE_NAME }}
       - name: Backend build and push
         uses: docker/build-push-action@v2
         id: backend_service_build
         with:
-          context: ${{ env.BACKEND_CONTEXT }}
+          context: ./backend
           builder: ${{ steps.buildx.outputs.name }}
           push: true
           # ghcr 에 저장할 tag 이름은 ghcr.io/<OWNER>/<IMAGE-NAME> 형식을 따른다.
           # 저장된 이미지는 github 저장소가 아닌, 사용자나 조직 같은 계정 밑에서 관리된다.
           tags: |
-            ${{ env.BACKEND_IMAGE_NAME }}:${{ env.VERSION }}
+            ${{ env.BACKEND_IMAGE_NAME }}
       - name: Mysql build and push
         uses: docker/build-push-action@v2
         id: mysql_service_build
         with:
-          context: ${{ env.MYSQL_CONTEXT }}
+          context: ./mysql
           builder: ${{ steps.buildx.outputs.name }}
           push: true
           # ghcr 에 저장할 tag 이름은 ghcr.io/<OWNER>/<IMAGE-NAME> 형식을 따른다.
           # 저장된 이미지는 github 저장소가 아닌, 사용자나 조직 같은 계정 밑에서 관리된다.
           tags: |
-            ${{ env.MYSQL_IMAGE_NAME }}:${{ env.VERSION }}
+            ${{ env.MYSQL_IMAGE_NAME }}
       - name: Nginx build and push
         uses: docker/build-push-action@v2
         id: nginx_service_build
         with:
-          context: ${{ env.NGINX_CONTEXT }}
+          context: ./nginx
           builder: ${{ steps.buildx.outputs.name }}
           push: true
           # ghcr 에 저장할 tag 이름은 ghcr.io/<OWNER>/<IMAGE-NAME> 형식을 따른다.
           # 저장된 이미지는 github 저장소가 아닌, 사용자나 조직 같은 계정 밑에서 관리된다.
           tags: |
-            ${{ env.NGINX_IMAGE_NAME }}:${{ env.VERSION }}
+            ${{ env.NGINX_IMAGE_NAME }}
 
   deploy:
     needs: [ build ]
@@ -135,8 +129,6 @@ jobs:
 
           chmod +x scripts/deploy.sh
           sh scripts/deploy.sh
-
-#          docker-compose -p prod up --force-recreate -d
   cleanup:
     needs: [ build, deploy ]
     name: Clean up
@@ -145,7 +137,6 @@ jobs:
       - name: Clean up docker images
         run: |
           # docker-compose.yml 에서 사용될 환경 변수들을 설정한다.
-          export IMAGE_VERSION=${{ env.VERSION }}
           export CLIENT_IMAGE_NAME=${{ env.CLIENT_IMAGE_NAME }}
           export BACKEND_IMAGE_NAME=${{ env.BACKEND_IMAGE_NAME }}
           export MYSQL_IMAGE_NAME=${{ env.MYSQL_IMAGE_NAME }}

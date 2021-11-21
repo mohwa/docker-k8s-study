@@ -2,9 +2,9 @@
 version: "3"
 services:
   client:
-    image: ghcr.io/mohwa/docker-k8s-study-client:${IMAGE_VERSION}
+    image: ${CLIENT_IMAGE_NAME}
   backend:
-    image: ghcr.io/mohwa/docker-k8s-study-backend:${IMAGE_VERSION}
+    image: ${BACKEND_IMAGE_NAME}
     environment:
       MYSQL_HOST: "mysql"
       MYSQL_PORT: 3306
@@ -12,10 +12,10 @@ services:
       MYSQL_ROOT_PASSWORD: "password"
       MYSQL_DATABASE: "my_app"
   mysql:
-    image: ghcr.io/mohwa/docker-k8s-study-mysql:${IMAGE_VERSION}
+    image: ${MYSQL_IMAGE_NAME}
     restart: unless-stopped
     ports:
-      - "3003:3306"
+      - "3306:3306"
     volumes:
       # 배포 시, 이전 버전의 컨테이너를 지우더라도 DB 에 저장된 자료를 지워지지않게해주는 volumes 설정이다.
       # 원래는 컨테이너를 삭제하면, 해당 컨테이너에 저장된 DB 는 지워지게됩니다.
@@ -28,7 +28,7 @@ services:
       # 환경 변수를 통해, mysql 의 root password 를 설정한다.
       MYSQL_ROOT_PASSWORD: "password"
   nginx:
-    image: ghcr.io/mohwa/docker-k8s-study-nginx:${IMAGE_VERSION}
+    image: ${NGINX_IMAGE_NAME}
     restart: always
     ports:
-      - "3002:80"
+      - "3001:80"

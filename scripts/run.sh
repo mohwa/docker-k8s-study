@@ -7,13 +7,12 @@ EXEC_PATH=$(cd $BASE_PATH/.. && pwd)
 
 source $BASE_PATH/utils.sh
 
-stop_container docker-k8s-study-client-dev
-stop_container docker-k8s-study-backend-dev
-stop_container docker-k8s-study-mysql-dev
-stop_container docker-k8s-study-nginx-dev
+#stop_container docker-k8s-study-client-dev
+#stop_container docker-k8s-study-backend-dev
+#stop_container docker-k8s-study-mysql-dev
+#stop_container docker-k8s-study-nginx-dev
 
-#COMMAND="cd $EXEC_PATH && docker-compose -f docker-compose-dev.yml -p dev up -d"
-COMMAND="cd $EXEC_PATH && docker-compose -f docker-compose-dev-test.yml up --force-recreate -d"
+COMMAND="cd $EXEC_PATH && docker-compose -f docker-compose-dev.yml -p dev up --force-recreate -d"
 
 if [[ "$#" -ge 1 ]]; then
   while (("$#")); do
@@ -36,8 +35,8 @@ else
    echo $COMMAND && eval $COMMAND
 fi
 
-#remove_image dev_client latest
-#remove_image dev_backend latest
-#remove_image dev_mysql latest
-#remove_image dev_nginx latest
+#remove_image dev_client:latest
+#remove_image dev_backend:latest
+#remove_image dev_mysql:latest
+#remove_image dev_nginx:latest
 
