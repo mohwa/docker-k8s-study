@@ -20,10 +20,10 @@ env:
   MYSQL_IMAGE_NAME: ghcr.io/${{ github.repository }}-mysql:${{ github.sha }}
   NGINX_IMAGE_NAME: ghcr.io/${{ github.repository }}-nginx:${{ github.sha }}
 
-  CLIENT_CONTAINER_NAME: ${{ github.repository }}-client
-  BACKEND_CONTAINER_NAME: ${{ github.repository }}-backend
-  MYSQL_CONTAINER_NAME: ${{ github.repository }}-mysql
-  NGINX_CONTAINER_NAME: ${{ github.repository }}-nginx
+  CLIENT_CONTAINER_NAME: prod-client
+  BACKEND_CONTAINER_NAME: prod-backend
+  MYSQL_CONTAINER_NAME: prod-mysql
+  NGINX_CONTAINER_NAME: prod-nginx
 
   VERSION: ${{ github.sha }}
 jobs:
