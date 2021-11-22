@@ -6,7 +6,9 @@ BASE_PATH=$(cd $(dirname $0) && pwd)
 EXEC_PATH=$(cd $BASE_PATH/.. && pwd)
 
 # docker project name 이 "/" 문자를 허용하지않아, 해당 문자를 "-" 로 대치시켰다.
-PROJECT_NAME=$(echo $EXEC_PATH | sed 's/\//-/g')-dev
+# 대문자를 모두 소문자로 대치시켰다.
+PROJECT_NAME=$(echo $EXEC_PATH | sed 's/\//-/g' | tr '[A-Z]' '[a-z]' | awk '{ print substr($0, 2) }')-dev
+
 COMMAND="cd $EXEC_PATH && docker-compose -f docker-compose-dev.yml -p $PROJECT_NAME up --force-recreate -d"
 
 if [[ "$#" -ge 1 ]]; then
