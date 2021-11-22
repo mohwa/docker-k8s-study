@@ -3,10 +3,8 @@ version: "3"
 services:
   client:
     image: ${CLIENT_IMAGE_NAME}
-    container_name: ${CLIENT_CONTAINER_NAME}
   backend:
     image: ${BACKEND_IMAGE_NAME}
-    container_name: ${BACKEND_CONTAINER_NAME}
     environment:
       MYSQL_HOST: "mysql"
       MYSQL_PORT: 3306
@@ -15,24 +13,21 @@ services:
       MYSQL_DATABASE: "my_app"
   mysql:
     image: ${MYSQL_IMAGE_NAME}
-    container_name: ${MYSQL_CONTAINER_NAME}
     restart: unless-stopped
     ports:
       - "3306:3306"
     volumes:
-      # 배포 시, 이전 버전의 컨테이너를 지우더라도 DB 에 저장된 자료를 지워지지않게해주는 volumes 설정이다.
-      # 원래는 컨테이너를 삭제하면, 해당 컨테이너에 저장된 DB 는 지워지게됩니다.
+      # 배포 시, 이전 버전의 컨테이너를 지우더라도 DB 에 저장된 데이터가 지워지지않게해주는 volumes 설정이다.
+      # 기본은 컨테이너 삭제 시, 해당 컨테이너에 저장된 데이터까지 지워지게됩니다.
 
-      # 이미지로 컨테이너를 생성하면, 해당 이미지는 "읽기 전용"으로 변경된다.
-      # docker 에는 /var/lib/ 라는 호스트 파일 시스템이 존재하고, DB 같이 영구적으로 저장해야할 데이터는 이곳에 저장한다.
+      # docker 에는 /var/lib/* 라는 호스트 파일 시스템이 존재하고, DB 처럼 영구적으로 저장해야할 데이터들은 이곳에 저장할 수 있다.
       - ./mysql/mysql_data:/var/lib/mysql
       - ./mysql/sqls:/docker-entrypoint-initdb.d
     environment:
-      # 환경 변수를 통해, mysql 의 root password 를 설정한다.
+      # 환경 변수를 통해, mysql 의 root 패스워드를 설정한다.
       MYSQL_ROOT_PASSWORD: "password"
   nginx:
     image: ${NGINX_IMAGE_NAME}
-    container_name: ${NGINX_CONTAINER_NAME}
     restart: always
     ports:
       - "3001:80"

@@ -5,14 +5,9 @@
 BASE_PATH=$(cd $(dirname $0) && pwd)
 EXEC_PATH=$(cd $BASE_PATH/.. && pwd)
 
-source $BASE_PATH/utils.sh
-
-#stop_container docker-k8s-study-client-dev
-#stop_container docker-k8s-study-backend-dev
-#stop_container docker-k8s-study-mysql-dev
-#stop_container docker-k8s-study-nginx-dev
-
-COMMAND="cd $EXEC_PATH && docker-compose -f docker-compose-dev.yml -p dev up --force-recreate -d"
+# docker project name 이 "/" 문자를 허용하지않아, 해당 문자를 "-" 로 대치시켰다.
+PROJECT_NAME=$(echo $EXEC_PATH | sed 's/\//-/g')-dev
+COMMAND="cd $EXEC_PATH && docker-compose -f docker-compose-dev.yml -p $PROJECT_NAME up --force-recreate -d"
 
 if [[ "$#" -ge 1 ]]; then
   while (("$#")); do
@@ -34,9 +29,3 @@ else
 
    echo $COMMAND && eval $COMMAND
 fi
-
-#remove_image dev_client:latest
-#remove_image dev_backend:latest
-#remove_image dev_mysql:latest
-#remove_image dev_nginx:latest
-
