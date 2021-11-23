@@ -1,0 +1,55 @@
+name: Deploy K8S(master, worker nodes)
+
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [feature/k8s-react-test]
+
+# ghcr 패키지(docker image) URL
+# https://github.com/users/mohwa/packages/container/package/mohwa%2Fdocker-k8s-study
+
+env:
+  # ghcr: github container registry
+  # https://github.com/features/packages
+  REGISTRY: ghcr.io
+  # ghcr 에 배포할 tag 이름은 ghcr.io/<OWNER>/<IMAGE-NAME> 형식을 따른다.
+  # 저장된 이미지는 github 저장소가 아닌, 사용자나 조직 같은 계정 밑에서 관리된다.
+  CLIENT_IMAGE_NAME: ghcr.io/${{ github.repository }}-client:${{ github.sha }}
+  BACKEND_IMAGE_NAME: ghcr.io/${{ github.repository }}-backend:${{ github.sha }}
+  MYSQL_IMAGE_NAME: ghcr.io/${{ github.repository }}-mysql:${{ github.sha }}
+  NGINX_IMAGE_NAME: ghcr.io/${{ github.repository }}-nginx:${{ github.sha }}
+  VERSION: ${{ github.sha }}
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: [ self-hosted ]
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+        with:
+          ref: feature/k8s-react-test
+      - name: Run docker containers
+        run: |
+          # docker project name 이 "/" 문자를 허용하지않아, 해당 문자를 "-" 로 대치시켰다.
+          # PROJECT_NAME=$(echo ${{ github.repository }} | sed 's/\//-/g')-prod
+          chmod +x scripts/k8s_env_build.sh
+          chmod +x scripts/k8s_pkg_cfg.sh
+          chmod +x scripts/master_node.sh
+          chmod +x scripts/work_nodes.sh
+
+          vagrant up
+#  cleanup:
+#    needs: [ build, deploy ]
+#    name: Clean up
+#    runs-on: [ self-hosted ]
+#    steps:
+#      - name: Clean up docker images
+#        run: |
+#          # docker-compose.yml 파일에서 사용될 환경 변수들을 설정한다.
+#          export CLIENT_IMAGE_NAME=${{ env.CLIENT_IMAGE_NAME }}
+#          export BACKEND_IMAGE_NAME=${{ env.BACKEND_IMAGE_NAME }}
+#          export MYSQL_IMAGE_NAME=${{ env.MYSQL_IMAGE_NAME }}
+#          export NGINX_IMAGE_NAME=${{ env.NGINX_IMAGE_NAME }}
+#          # 이전 docker 이미지들을 삭제한다.
+#          chmod +x scripts/cleanup.sh
+#          sh scripts/cleanup.sh
