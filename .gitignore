@@ -1,25 +1,3 @@
-# Dependency directories
-node_modules/
-
-# lock file
-# yarn.lock
-
-# log
-*.log*
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# IDE
-.DS_STORE
-.idea/
-*.iml
-.vscode/
-
-# output
-dist/
-
-
-# cache
-.eslintcache
-
+.gitignore
+.idea
+actions-runner
