@@ -33,7 +33,7 @@ Vagrant.configure("2") do |config|
         vb.customize ["modifyvm", :id, "--groups", "/k8s-SgMST-#{K8S_MINOR_VERSION}(github_SysNet4Admin)"]
       end
       cfg.vm.host_name = "m-k8s"
-      cfg.vm.network "private_network", ip: "192.168.1.10"
+      cfg.vm.network "private_network", ip: "192.168.56.10"
       cfg.vm.network "forwarded_port", guest: 22, host: 60010, auto_correct: true, id: "ssh"
       cfg.vm.synced_folder "../data", "/vagrant", disabled: true
       cfg.vm.provision "shell", path: "scripts/k8s_env_build.sh", args: WORKER_COUNT
@@ -56,7 +56,7 @@ Vagrant.configure("2") do |config|
         vb.customize ["modifyvm", :id, "--groups", "/k8s-SgMST-#{K8S_MINOR_VERSION}(github_SysNet4Admin)"]
       end
       cfg.vm.host_name = "w#{i}-k8s"
-      cfg.vm.network "private_network", ip: "192.168.1.10#{i}"
+      cfg.vm.network "private_network", ip: "192.168.56.10#{i}"
       cfg.vm.network "forwarded_port", guest: 22, host: "6010#{i}", auto_correct: true, id: "ssh"
       cfg.vm.synced_folder "../data", "/vagrant", disabled: true
       cfg.vm.provision "shell", path: "scripts/k8s_env_build.sh", args: WORKER_COUNT
