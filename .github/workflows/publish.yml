@@ -117,7 +117,7 @@ jobs:
           cd k8s_config
 
           # k8s_ghcr: 쿠버네티스 secret 이름
-          kubectl create secret docker-registry k8s_ghcr \
+          kubectl create secret docker-registry k8s-ghcr \
           --docker-server=ghcr.io \
           --docker-username=mohwa \
           --docker-password=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 \

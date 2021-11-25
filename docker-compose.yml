@@ -4,7 +4,7 @@ services:
   client:
     image: ${CLIENT_IMAGE_NAME}
     labels:
-      kompose.image-pull-secret: k8s_ghcr
+      kompose.image-pull-secret: k8s-ghcr
   backend:
     image: ${BACKEND_IMAGE_NAME}
     environment:
@@ -14,7 +14,7 @@ services:
       MYSQL_ROOT_PASSWORD: "password"
       MYSQL_DATABASE: "my_app"
     labels:
-      kompose.image-pull-secret: k8s_ghcr
+      kompose.image-pull-secret: k8s-ghcr
   mysql:
     image: ${MYSQL_IMAGE_NAME}
     restart: unless-stopped
@@ -31,11 +31,11 @@ services:
       # 환경 변수를 통해, mysql 의 root 패스워드를 설정한다.
       MYSQL_ROOT_PASSWORD: "password"
     labels:
-      kompose.image-pull-secret: k8s_ghcr
+      kompose.image-pull-secret: k8s-ghcr
   nginx:
     image: ${NGINX_IMAGE_NAME}
     restart: always
     ports:
       - "3001:80"
     labels:
-      kompose.image-pull-secret: k8s_ghcr
+      kompose.image-pull-secret: k8s-ghcr
