@@ -9,7 +9,7 @@ yum install git -y
 yum install docker-ce-$2 docker-ce-cli-$2 containerd.io-$3 -y
 # install kompose
 # https://kompose.io/installation/
-yum install kompose -y
+#yum install kompose -y
 # shasum 을 위해 설치한다.
 # https://soye0n.tistory.com/172
 yum install -y perl-Digest-SHA
