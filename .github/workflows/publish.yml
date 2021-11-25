@@ -113,7 +113,7 @@ jobs:
 
           mkdir -p k8s_config
           cd k8s_config
-          kompose -f ../docker-compose.yml convert
+          kompose -f ../docker-compose.yml --output-version apps/v1 convert
           kubectl apply -f .
           kubectl describe svc client
 #  cleanup:
