@@ -4,3 +4,5 @@ mysql/mysql_data
 actions-runner
 client/node_modules/
 backend/node_modules/
+.DS_Store
+.vagrant
