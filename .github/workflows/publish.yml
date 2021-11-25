@@ -120,7 +120,7 @@ jobs:
           kubectl create secret docker-registry k8s_ghcr \
           --docker-server=ghcr.io \
           --docker-username=mohwa \
-          --docker-password=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 \
+          --docker-password=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 \
           --docker-email=yanione2@gmail.com
 
           # install kompose
