@@ -115,11 +115,12 @@ jobs:
 
           mkdir -p k8s_config
           cd k8s_config
-          kubectl -n default create secret docker-registry k8s_ghcr \
-          --docker-server=ghcr.io \
-          --docker-username=mohwa \
-          --docker-password=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 \
-          --docker-email=yanione2@gmail.com
+
+          # kubectl -n default create secret docker-registry k8s_ghcr \
+          # --docker-server=ghcr.io \
+          # --docker-username=mohwa \
+          # --docker-password=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 \
+          # --docker-email=yanione2@gmail.com
 
           # install kompose
           curl -L https://github.com/kubernetes/kompose/releases/download/v1.24.0/kompose-linux-amd64 -o kompose
