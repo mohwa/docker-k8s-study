@@ -3,7 +3,7 @@ name: ci / cd
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [feature/docker-react-test]
+    branches: [feature/docker-react-test-with-k8s]
 #    branches: [ master ]
 
 # ghcr 패키지(docker image) URL
@@ -28,7 +28,7 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v2
         with:
-          ref: feature/docker-react-test
+          ref: feature/docker-react-test-with-k8s
         # docker buildx: 여러 플랫폼(또는 아키텍쳐)(linux/amd64, linux/arm64, linux/ppc64le, linux/s390x, linux/386 등)으로 빌드하는 기능 등을 포함한 cli 확장 플러그인이다.
         # https://meetup.toast.com/posts/255
         # https://github.com/docker/setup-buildx-action
@@ -99,7 +99,7 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v2
         with:
-          ref: feature/docker-react-test
+          ref: feature/docker-react-test-with-k8s
       - name: Login to ghcr
         uses: docker/login-action@v1
         with:
@@ -109,21 +109,26 @@ jobs:
       - name: Run docker containers
         run: |
           # docker project name 이 "/" 문자를 허용하지않아, 해당 문자를 "-" 로 대치시켰다.
-          PROJECT_NAME=$(echo ${{ github.repository }} | sed 's/\//-/g')-prod
-          docker-compose -p $PROJECT_NAME up --force-recreate -d
-  cleanup:
-    needs: [ build, deploy ]
-    name: Clean up
-    runs-on: [ self-hosted ]
-    steps:
-      - name: Clean up docker images
-        run: |
-          # docker-compose.yml 파일에서 사용될 환경 변수들을 설정한다.
-          export CLIENT_IMAGE_NAME=${{ env.CLIENT_IMAGE_NAME }}
-          export BACKEND_IMAGE_NAME=${{ env.BACKEND_IMAGE_NAME }}
-          export MYSQL_IMAGE_NAME=${{ env.MYSQL_IMAGE_NAME }}
-          export NGINX_IMAGE_NAME=${{ env.NGINX_IMAGE_NAME }}
+          # PROJECT_NAME=$(echo ${{ github.repository }} | sed 's/\//-/g')-prod
 
-          # 이전 docker 이미지들을 삭제한다.
-          chmod +x scripts/cleanup.sh
-          sh scripts/cleanup.sh
+          mkdir -p k8s_config
+          cd k8s_config
+          kompose -f ../docker-compose.yml convert
+          kubectl apply .
+          kubectl describe svc client
+#  cleanup:
+#    needs: [ build, deploy ]
+#    name: Clean up
+#    runs-on: [ self-hosted ]
+#    steps:
+#      - name: Clean up docker images
+#        run: |
+#          # docker-compose.yml 파일에서 사용될 환경 변수들을 설정한다.
+#          export CLIENT_IMAGE_NAME=${{ env.CLIENT_IMAGE_NAME }}
+#          export BACKEND_IMAGE_NAME=${{ env.BACKEND_IMAGE_NAME }}
+#          export MYSQL_IMAGE_NAME=${{ env.MYSQL_IMAGE_NAME }}
+#          export NGINX_IMAGE_NAME=${{ env.NGINX_IMAGE_NAME }}
+#
+#          # 이전 docker 이미지들을 삭제한다.
+#          chmod +x scripts/cleanup.sh
+#          sh scripts/cleanup.sh
