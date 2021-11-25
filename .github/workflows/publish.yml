@@ -48,7 +48,7 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.repository_owner }}
           # repository 에서 설정된 secrets 값을 정의한다.
-          password: ${{ secrets.GHP_REACT_TEST_WITH_K8S }}
+          password: ${{ secrets.GHP_REACT_TEST }}
       - name: Client build and push
         uses: docker/build-push-action@v2
         id: client_build
@@ -105,7 +105,7 @@ jobs:
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
-          password: ${{ secrets.GHP_REACT_TEST_WITH_K8S }}
+          password: ${{ secrets.GHP_REACT_TEST }}
       - name: Run docker containers
         run: |
           # docker project name 이 "/" 문자를 허용하지않아, 해당 문자를 "-" 로 대치시켰다.
@@ -116,11 +116,12 @@ jobs:
           mkdir -p k8s_config
           cd k8s_config
 
-          # kubectl -n default create secret docker-registry k8s_ghcr \
-          # --docker-server=ghcr.io \
-          # --docker-username=mohwa \
-          # --docker-password=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 \
-          # --docker-email=yanione2@gmail.com
+          # k8s_ghcr: 쿠버네티스 secret 이름
+          kubectl create secret docker-registry k8s_ghcr \
+          --docker-server=ghcr.io \
+          --docker-username=mohwa \
+          --docker-password=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 \
+          --docker-email=yanione2@gmail.com
 
           # install kompose
           curl -L https://github.com/kubernetes/kompose/releases/download/v1.24.0/kompose-linux-amd64 -o kompose
