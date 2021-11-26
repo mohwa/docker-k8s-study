@@ -3,6 +3,8 @@ version: "3"
 services:
   client:
     image: ${CLIENT_IMAGE_NAME}
+    expose:
+      - "3000"
     labels:
       kompose.image-pull-secret: k8s-ghcr
   backend:
@@ -13,6 +15,8 @@ services:
       MYSQL_ROOT_USER: "root"
       MYSQL_ROOT_PASSWORD: "password"
       MYSQL_DATABASE: "my_app"
+    expose:
+      - "5000"
     labels:
       kompose.image-pull-secret: k8s-ghcr
   mysql:

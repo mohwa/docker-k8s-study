@@ -11,6 +11,8 @@ services:
       # https://ui.toast.com/weekly-pick/ko_20160823
       # client/node_modules 폴더는 매핑하지않는다.
       - /app/node_modules
+    expose:
+      - "3000"
   backend:
     build:
       context: ./backend
@@ -24,6 +26,8 @@ services:
       MYSQL_ROOT_USER: "root"
       MYSQL_ROOT_PASSWORD: "password"
       MYSQL_DATABASE: "my_app"
+    expose:
+      - "5000"
   mysql:
     build:
       # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치

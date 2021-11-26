@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const db = require('./db');
 
+// backend 서버 포트
 const PORT = 5000;
 
 const app = express();
