@@ -48,7 +48,7 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.repository_owner }}
           # repository 에서 설정된 secrets 값을 정의한다.
-          password: ${{ secrets.CR_PAT }}
+          password: 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
       - name: Client build and push
         uses: docker/build-push-action@v2
         id: client_build
@@ -105,7 +105,7 @@ jobs:
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
-          password: ${{ secrets.CR_PAT }}
+          password: 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
       - name: Run docker containers
         run: |
           # docker project name 이 "/" 문자를 허용하지않아, 해당 문자를 "-" 로 대치시켰다.
@@ -120,7 +120,7 @@ jobs:
           kubectl create secret docker-registry k8s-ghcr \
           --docker-server=ghcr.io \
           --docker-username=mohwa \
-          --docker-password=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 \
+          --docker-password=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 \
           --docker-email=yanione2@gmail.com >> /dev/null 2>&1
 
           # default serviceaccount 에 생성된 imagePullSecrets 를 추가한다.
