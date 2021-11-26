@@ -7,6 +7,7 @@ services:
       - "3000"
     labels:
       kompose.service.type: nodeport
+      kompose.service.nodeport.port: 30036
       kompose.image-pull-secret: k8s-ghcr
   backend:
     image: ${BACKEND_IMAGE_NAME}
@@ -19,7 +20,6 @@ services:
     expose:
       - "5000"
     labels:
-      kompose.service.type: nodeport
       kompose.image-pull-secret: k8s-ghcr
   mysql:
     image: ${MYSQL_IMAGE_NAME}
@@ -37,7 +37,6 @@ services:
       # 환경 변수를 통해, mysql 의 root 패스워드를 설정한다.
       MYSQL_ROOT_PASSWORD: "password"
     labels:
-      kompose.service.type: nodeport
       kompose.image-pull-secret: k8s-ghcr
   nginx:
     image: ${NGINX_IMAGE_NAME}
@@ -45,5 +44,4 @@ services:
     ports:
       - "3001:80"
     labels:
-      kompose.service.type: nodeport
       kompose.image-pull-secret: k8s-ghcr
