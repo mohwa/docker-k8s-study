@@ -138,7 +138,7 @@ jobs:
           # selector 없이도 배포될 수 있게 validate 옵션에 일단 false 를 할당한다.
           # https://velog.io/@makeitcloud/Kubernetes-missing-required-field-selector-in-io.k8s.api.apps.v1.-turn-validation-off-with-validatefalse-%EC%97%90%EB%9F%AC-%ED%95%B4%EA%B2%B0%ED%95%98%EA%B8%B0
           kubectl apply -f .
-          kubectl describe svc client
+          kubectl get svc
 #  cleanup:
 #    needs: [ build, deploy ]
 #    name: Clean up
