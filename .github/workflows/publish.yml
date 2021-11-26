@@ -115,10 +115,11 @@ jobs:
           cd k8s_config
 
           # k8s_ghcr: 쿠버네티스 secret 이름
+          # password 에는 ghcr 패키지용 토큰을 설정한다.
           kubectl create secret docker-registry k8s-ghcr \
           --docker-server=ghcr.io \
           --docker-username=mohwa \
-          --docker-password=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 \
+          --docker-password=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 \
           --docker-email=yanione2@gmail.com
 
           # install kompose
