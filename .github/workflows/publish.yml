@@ -116,14 +116,11 @@ jobs:
 
           # k8s_ghcr: 쿠버네티스 secret 이름
           # password 에는 ghcr 패키지용 토큰을 설정한다.
-          # k8s-ghcr secret 삭제
-          kubectl delete secret k8s-ghcr
-
           kubectl create secret docker-registry k8s-ghcr \
           --docker-server=ghcr.io \
           --docker-username=mohwa \
           --docker-password=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 \
-          --docker-email=yanione2@gmail.com
+          --docker-email=yanione2@gmail.com >> /dev/null 2>&1
 
           # install kompose
           curl -L https://github.com/kubernetes/kompose/releases/download/v1.24.0/kompose-linux-amd64 -o kompose
