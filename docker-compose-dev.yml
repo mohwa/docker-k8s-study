@@ -6,11 +6,12 @@ services:
       context: ./client
       dockerfile: Dockerfile.dev
     volumes:
-      # client 폴더안의 모든 파일 or 폴더들을 매핑한다.
-      - ./client:/app
+      # client 폴더안의 모든 파일 및 디렉토리들을 바인드한다.
+      - ./client:/home/app/my-app
       # https://ui.toast.com/weekly-pick/ko_20160823
-      # client/node_modules 폴더는 매핑하지않는다.
-      - /app/node_modules
+      # client/node_modules 폴더는 바인드하지않는다.
+      # https://ui.toast.com/weekly-pick/ko_20160823#node_modules-%EB%B6%88%EB%A5%A8-%ED%8A%B8%EB%A6%AD
+      - /home/app/my-app/node_modules
     expose:
       - "3000"
   backend:
@@ -18,23 +19,23 @@ services:
       context: ./backend
       dockerfile: Dockerfile.dev
     volumes:
-      - ./backend:/app
-      - /app/node_modules
+      - ./backend:/home/app/my-app
+      - /home/app/my-app/node_modules
+    expose:
+      - "5000"
     environment:
       MYSQL_HOST: "mysql"
       MYSQL_PORT: 3306
       MYSQL_ROOT_USER: "root"
       MYSQL_ROOT_PASSWORD: "password"
       MYSQL_DATABASE: "my_app"
-    expose:
-      - "5000"
   mysql:
     build:
       # 도커 이미지를 구성하기위한 파일과 폴더들이 있는 위치
       context: ./mysql
       dockerfile: Dockerfile
     # 개발자가 임의로 멈추려고할때 빼고는 항상 재시작한다.
-    restart: unless-stopped
+    restart: always
     ports:
       - "3307:3306"
     volumes:

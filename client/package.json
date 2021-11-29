@@ -4,9 +4,8 @@
   "description": "docker-k8s-study-client",
   "private": true,
   "scripts": {
-    "start1": "webpack serve",
-    "start": "export NODE_OPTIONS=--openssl-legacy-provider && webpack serve",
-    "build": "export NODE_OPTIONS=--openssl-legacy-provider && webpack",
+    "start": "webpack serve",
+    "build": "webpack",
     "test": "jest --config jest.config.js --colors --passWithNoTests"
   },
   "devDependencies": {

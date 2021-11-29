@@ -1,8 +1,5 @@
-.gitignore
-.idea
-mysql/mysql_data
-actions-runner
-client/node_modules/
-backend/node_modules/
-.vagrant
 .DS_Store
+.idea
+.vagrant
+actions-runner
+.gitignore

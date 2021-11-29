@@ -6,8 +6,6 @@ services:
     expose:
       - "3000"
     labels:
-      kompose.service.type: nodeport
-      kompose.service.nodeport.port: 30036
       kompose.image-pull-secret: k8s-ghcr
   backend:
     image: ${BACKEND_IMAGE_NAME}
@@ -23,9 +21,14 @@ services:
       kompose.image-pull-secret: k8s-ghcr
   mysql:
     image: ${MYSQL_IMAGE_NAME}
-    restart: unless-stopped
+    # unless-stopped 값 적용 시, pod 생성 시, 아래와 같은 warn 메시지를 반환한다.
+    # Restart policy 'unless-stopped' in service mysql is not supported, convert it to 'always'
+    restart: always
     ports:
       - "3306:3306"
+    environment:
+      # 환경 변수를 통해, mysql 의 root 패스워드를 설정한다.
+      MYSQL_ROOT_PASSWORD: "password"
     volumes:
       # 배포 시, 이전 버전의 컨테이너를 지우더라도 DB 에 저장된 데이터가 지워지지않게해주는 volumes 설정이다.
       # 기본은 컨테이너 삭제 시, 해당 컨테이너에 저장된 데이터까지 지워지게됩니다.
@@ -33,16 +36,14 @@ services:
       # docker 에는 /var/lib/* 라는 호스트 파일 시스템이 존재하고, DB 처럼 영구적으로 저장해야할 데이터들은 이곳에 저장할 수 있다.
       - ./mysql/mysql_data:/var/lib/mysql
       - ./mysql/sqls:/docker-entrypoint-initdb.d
-    environment:
-      # 환경 변수를 통해, mysql 의 root 패스워드를 설정한다.
-      MYSQL_ROOT_PASSWORD: "password"
     labels:
       kompose.image-pull-secret: k8s-ghcr
-      kompose.volume.storage-class-name: ""
   nginx:
     image: ${NGINX_IMAGE_NAME}
     restart: always
     ports:
       - "3001:80"
     labels:
+      kompose.service.type: nodeport
+      kompose.service.nodeport.port: 3001
       kompose.image-pull-secret: k8s-ghcr
