@@ -11,7 +11,7 @@ services:
     image: ${BACKEND_IMAGE_NAME}
     environment:
       MYSQL_HOST: "mysql"
-      MYSQL_PORT: 3306
+      MYSQL_PORT: 33306
       MYSQL_ROOT_USER: "root"
       MYSQL_ROOT_PASSWORD: "password"
       MYSQL_DATABASE: "my_app"
@@ -30,6 +30,8 @@ services:
       # 환경 변수를 통해, mysql 의 root 패스워드를 설정한다.
       MYSQL_ROOT_PASSWORD: "password"
     labels:
+      kompose.service.type: nodeport
+      kompose.service.nodeport.port: 33306
       kompose.image-pull-secret: k8s-ghcr
   nginx:
     image: ${NGINX_IMAGE_NAME}
@@ -39,5 +41,6 @@ services:
     labels:
       kompose.service.type: nodeport
       # NodePort 는 30000 ~ 32767 포트로 설정해야한다.
-      kompose.service.nodeport.port: 31000
+      # NodePort(31000) < pod port(3001) < container port(80)
+      kompose.service.nodeport.port: 30001
       kompose.image-pull-secret: k8s-ghcr
