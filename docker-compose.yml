@@ -29,6 +29,7 @@ services:
     environment:
       # 환경 변수를 통해, mysql 의 root 패스워드를 설정한다.
       MYSQL_ROOT_PASSWORD: "password"
+      MYSQL_ROOT_HOST: "%"
     labels:
       kompose.image-pull-secret: k8s-ghcr
   nginx:
