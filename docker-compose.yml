@@ -29,11 +29,6 @@ services:
     environment:
       # 환경 변수를 통해, mysql 의 root 패스워드를 설정한다.
       MYSQL_ROOT_PASSWORD: "password"
-    volumes:
-      # 배포 시, 이전 버전의 컨테이너를 지우더라도 DB 에 저장된 데이터가 지워지지않게해주는 volumes 설정이다.
-      # 기본은 컨테이너 삭제 시, 해당 컨테이너에 저장된 데이터까지 지워지게됩니다.
-
-      # docker 에는 /var/lib/* 라는 호스트 파일 시스템이 존재하고, DB 처럼 영구적으로 저장해야할 데이터들은 이곳에 저장할 수 있다.
     labels:
       kompose.image-pull-secret: k8s-ghcr
   nginx:
