@@ -38,6 +38,7 @@ services:
       MYSQL_ROOT_PASSWORD: "password"
     labels:
       kompose.image-pull-secret: k8s-ghcr
+      kompose.volume.storage-class-name: ""
   nginx:
     image: ${NGINX_IMAGE_NAME}
     restart: always
