@@ -45,5 +45,6 @@ services:
       - "3001:80"
     labels:
       kompose.service.type: nodeport
-      kompose.service.nodeport.port: 3001
+      # NodePort 는 30000 ~ 32767 포트로 설정해야한다.
+      kompose.service.nodeport.port: 31000
       kompose.image-pull-secret: k8s-ghcr
