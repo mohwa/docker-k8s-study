@@ -10,7 +10,7 @@ services:
   backend:
     image: ${BACKEND_IMAGE_NAME}
     environment:
-      MYSQL_HOST: "localhost"
+      MYSQL_HOST: "mysql"
       MYSQL_PORT: 3306
       MYSQL_ROOT_USER: "root"
       MYSQL_ROOT_PASSWORD: "password"
@@ -31,7 +31,7 @@ services:
       MYSQL_ROOT_PASSWORD: "password"
       # "%" 값은 모든 ip 로 부터 로그인을 허용한다.
       # https://serverfault.com/questions/793058/can-not-access-mysql-docker
-      MYSQL_ROOT_HOST: "%"
+      # MYSQL_ROOT_HOST: "%"
     labels:
       kompose.image-pull-secret: k8s-ghcr
   nginx:
