@@ -11,7 +11,7 @@ services:
     image: ${BACKEND_IMAGE_NAME}
     environment:
       MYSQL_HOST: "mysql"
-      MYSQL_PORT: 33306
+      MYSQL_PORT: 30002
       MYSQL_ROOT_USER: "root"
       MYSQL_ROOT_PASSWORD: "password"
       MYSQL_DATABASE: "my_app"
