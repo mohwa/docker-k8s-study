@@ -34,7 +34,7 @@ services:
       # 기본은 컨테이너 삭제 시, 해당 컨테이너에 저장된 데이터까지 지워지게됩니다.
 
       # docker 에는 /var/lib/* 라는 호스트 파일 시스템이 존재하고, DB 처럼 영구적으로 저장해야할 데이터들은 이곳에 저장할 수 있다.
-      - ./mysql/mysql_data:/var/lib/mysql
+      # - ./mysql/mysql_data:/var/lib/mysql
       - ./mysql/sqls:/docker-entrypoint-initdb.d
     labels:
       kompose.image-pull-secret: k8s-ghcr
