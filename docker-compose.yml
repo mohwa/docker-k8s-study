@@ -11,7 +11,7 @@ services:
     image: ${BACKEND_IMAGE_NAME}
     environment:
       MYSQL_HOST: "mysql"
-      MYSQL_PORT: 30002
+      MYSQL_PORT: 3306
       MYSQL_ROOT_USER: "root"
       MYSQL_ROOT_PASSWORD: "password"
       MYSQL_DATABASE: "my_app"
@@ -24,6 +24,8 @@ services:
     # unless-stopped 값 적용 시, pod 생성 시, 아래와 같은 warn 메시지를 반환한다.
     # Restart policy 'unless-stopped' in service mysql is not supported, convert it to 'always'
     restart: always
+    expose:
+      - "3306"
     ports:
       - "3306:3306"
     environment:
@@ -36,11 +38,13 @@ services:
   nginx:
     image: ${NGINX_IMAGE_NAME}
     restart: always
+    expose:
+      - "80"
     ports:
       - "3001:80"
     labels:
       kompose.service.type: nodeport
       # NodePort 는 30000 ~ 32767 포트로 설정해야한다.
-      # NodePort(31000) < pod port(3001) < container port(80)
+      # NodePort(31000) < service port(3001) < target(pod) port(80)
       kompose.service.nodeport.port: 30001
       kompose.image-pull-secret: k8s-ghcr
