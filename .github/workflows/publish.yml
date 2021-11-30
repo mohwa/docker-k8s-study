@@ -114,25 +114,22 @@ jobs:
           mkdir -p k8s_config
           cd k8s_config
 
-          echo $(pwd)
-
           # k8s_ghcr: 쿠버네티스 secret 이름
           # password 에는 ghcr 패키지용 토큰을 설정한다.
           # https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#add-imagepullsecrets-to-a-service-account
           # https://loft.sh/blog/docker-compose-to-kubernetes-step-by-step-migration/
-          kubectl delete secret k8s-ghcr >> /dev/null 2>&1
+          kubectl delete secret k8s-ghcr > /dev/null 2>&1
+
           kubectl create secret docker-registry k8s-ghcr \
           --docker-server=ghcr.io \
           --docker-username=mohwa \
           --docker-password=${{ secrets.GHCR_TOKEN }} \
-          --docker-email=yanione2@gmail.com >> /dev/null 2>&1
+          --docker-email=yanione2@gmail.com > /dev/null 2>&1
 
           kubectl get secret
 
           # default serviceaccount 에 생성된 imagePullSecrets 를 추가한다.
           kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name": "k8s-ghcr"}]}' >> /dev/null 2>&1
-
-          kubectl describe serviceaccount default
 
           # docker login
           echo ${{ secrets.GHCR_TOKEN }} | docker login https://ghcr.io -u mohwa --password-stdin
@@ -151,7 +148,6 @@ jobs:
           kubectl apply -f .
           kubectl get svc
 
-          echo 0
 #  cleanup:
 #    needs: [ build, deploy ]
 #    name: Clean up
