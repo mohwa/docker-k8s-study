@@ -123,14 +123,6 @@ jobs:
 
           kubectl delete secret k8s-ghcr >> /dev/null 2>&1
 
-          kubectl create secret docker-registry k8s-ghcr \
-            --docker-server=ghcr.io \
-            --docker-username=mohwa \
-            --docker-password=${{ secrets.GHCR_TOKEN }} \
-            --docker-email=yanione2@gmail.com >> /dev/null 2>&1
-
-          echo $?
-
 
 #  cleanup:
 #    needs: [ build, deploy ]
