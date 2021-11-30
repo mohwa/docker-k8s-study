@@ -10,7 +10,7 @@ services:
   backend:
     image: ${BACKEND_IMAGE_NAME}
     environment:
-      MYSQL_HOST: "localhost"
+      MYSQL_HOST: "mysql"
       MYSQL_PORT: 3306
       MYSQL_ROOT_USER: "root"
       MYSQL_ROOT_PASSWORD: "password"
