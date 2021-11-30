@@ -25,12 +25,13 @@ services:
     image: ${MYSQL_IMAGE_NAME}
     # unless-stopped 값 적용 시, pod 생성 시, 아래와 같은 warn 메시지를 반환한다.
     # Restart policy 'unless-stopped' in service mysql is not supported, convert it to 'always'
-    restart: always
+    restart: unless-stopped
     ports:
       - "3306:3306"
     environment:
       # 환경 변수를 통해, mysql 의 root 패스워드를 설정한다.
       MYSQL_ROOT_PASSWORD: "password"
+      MYSQL_DATABASE: "my_app""
       # "%" 값은 모든 ip 로 부터 로그인을 허용한다.
       # https://serverfault.com/questions/793058/can-not-access-mysql-docker
       # MYSQL_ROOT_HOST: "%"
