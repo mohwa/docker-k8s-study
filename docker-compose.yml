@@ -17,7 +17,7 @@ services:
       MYSQL_DATABASE: "my_app"
     expose:
       - "5000"
-    depends_on:
+    links:
       - mysql
     labels:
       kompose.image-pull-secret: k8s-ghcr
