@@ -151,7 +151,7 @@ jobs:
           kubectl apply -f .
           kubectl get svc
 
-          echo $?
+          echo 0
 #  cleanup:
 #    needs: [ build, deploy ]
 #    name: Clean up
