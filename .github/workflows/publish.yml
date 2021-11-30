@@ -114,47 +114,7 @@ jobs:
           mkdir -p k8s_config
           cd k8s_config
 
-          # k8s_ghcr: 쿠버네티스 secret 이름
-          # password 에는 ghcr 패키지용 토큰을 설정한다.
-          # https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#add-imagepullsecrets-to-a-service-account
-          # https://loft.sh/blog/docker-compose-to-kubernetes-step-by-step-migration/
-          kubectl delete secret k8s-ghcr > /dev/null 2>&1
-          # kubectl delete secret k8s-ghcr
-
-          # kubectl create secret docker-registry k8s-ghcr \
-          # --docker-server=ghcr.io \
-          # --docker-username=mohwa \
-          # --docker-password=${{ secrets.GHCR_TOKEN }} \
-          # --docker-email=yanione2@gmail.com > /dev/null 2>&1
-
-          # docker login
-          echo ${{ secrets.GHCR_TOKEN }} | docker login https://ghcr.io -u mohwa --password-stdin
-
-          kubectl create secret docker-registry k8s-ghcr \
-          --docker-server=ghcr.io \
-          --docker-username=mohwa \
-          --docker-password=${{ secrets.GHCR_TOKEN }} \
-          --docker-email=yanione2@gmail.com
-
-          kubectl get secret
-
-          # default serviceaccount 에 생성된 imagePullSecrets 를 추가한다.
-          # kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name": "k8s-ghcr"}]}' >> /dev/null 2>&1
-          kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name": "k8s-ghcr"}]}'
-
-          # install kompose
-          curl -L https://github.com/kubernetes/kompose/releases/download/v1.24.0/kompose-linux-amd64 -o kompose
-          chmod +x kompose
-          sudo mv ./kompose /usr/local/bin/kompose
-
-          kompose version
-
-          # .bash_profile 에 /usr/local/bin 이 없다면, PATH 변수에 추가해줘야하는 코드도 있어야할것같다.
-          # https://velog.io/@makeitcloud/kubernetes-no-matches-for-kind-deployment-in-version-extensionsv1beta1-%EC%97%90%EB%9F%AC-%ED%95%B4%EA%B2%B0%ED%95%98%EA%B8%B0
-          kompose -f ../docker-compose.yml convert
-          # find -name "*.yaml" -exec sed -i "s/extensions\/v1beta1/apps\/v1/g" {} \;
-          kubectl apply -f .
-          kubectl get svc
+          echo test
 
 #  cleanup:
 #    needs: [ build, deploy ]
