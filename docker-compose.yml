@@ -37,8 +37,6 @@ services:
       # "%" 값은 모든 ip 로 부터 로그인을 허용한다.
       # https://serverfault.com/questions/793058/can-not-access-mysql-docker
       # MYSQL_ROOT_HOST: "%"
-    volumes:
-      - mysql-data:/var/lib/mysql
     labels:
       kompose.image-pull-secret: k8s-ghcr
   nginx:
@@ -54,6 +52,3 @@ services:
       # https://t1.daumcdn.net/cfile/tistory/99ACBB4F5B288E161A?download
       kompose.service.nodeport.port: 30001
       kompose.image-pull-secret: k8s-ghcr
-
-volumes:
-  mysql-data:
