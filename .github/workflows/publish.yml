@@ -126,7 +126,7 @@ jobs:
           kubectl create secret docker-registry k8s-ghcr \
             --docker-server=ghcr.io \
             --docker-username=mohwa \
-            --docker-password=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 \
+            --docker-password=${{ secrets.GHCR_TOKEN }} \
             --docker-email=yanione2@gmail.com
 
 #  cleanup:
