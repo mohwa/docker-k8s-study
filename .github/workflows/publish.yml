@@ -111,6 +111,8 @@ jobs:
           # docker project name 이 "/" 문자를 허용하지않아, 해당 문자를 "-" 로 대치시켰다.
           # PROJECT_NAME=$(echo ${{ github.repository }} | sed 's/\//-/g')-prod
 
+          echo $PATH
+
           mkdir -p k8s_config
           cd k8s_config
 
@@ -118,9 +120,6 @@ jobs:
           # password 에는 ghcr 패키지용 토큰을 설정한다.
           # https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#add-imagepullsecrets-to-a-service-account
           # https://loft.sh/blog/docker-compose-to-kubernetes-step-by-step-migration/
-          echo $PATH
-          echo $(kubectl version)
-
           kubectl delete secret k8s-ghcr >> /dev/null 2>&1
 
           kubectl create secret docker-registry k8s-ghcr \
@@ -131,9 +130,6 @@ jobs:
 
           # default serviceaccount 에 생성된 imagePullSecrets 를 추가한다.
           kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name": "k8s-ghcr"}]}'
-
-          # docker login
-          echo ${{ secrets.GHCR_TOKEN }} | docker login https://ghcr.io -u mohwa --password-stdin
 
           # install kompose
           curl -L https://github.com/kubernetes/kompose/releases/download/v1.24.0/kompose-linux-amd64 -o kompose
