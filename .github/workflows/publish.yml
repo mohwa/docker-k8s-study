@@ -20,7 +20,6 @@ env:
   MYSQL_IMAGE_NAME: ghcr.io/${{ github.repository }}-mysql:${{ github.sha }}
   NGINX_IMAGE_NAME: ghcr.io/${{ github.repository }}-nginx:${{ github.sha }}
   VERSION: ${{ github.sha }}
-  GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
 jobs:
   build:
     name: Build
@@ -124,18 +123,16 @@ jobs:
           # https://loft.sh/blog/docker-compose-to-kubernetes-step-by-step-migration/
           kubectl delete secret k8s-ghcr >> /dev/null 2>&1
 
-          echo $GHCR_TOKEN
-
           kubectl create secret docker-registry k8s-ghcr \
           --docker-server=ghcr.io \
           --docker-username=mohwa \
-          --docker-password=$GHCR_TOKEN \
+          --docker-password=${{ secrets.GHCR_TOKEN }} \
           --docker-email=yanione2@gmail.com
 
           # default serviceaccount 에 생성된 imagePullSecrets 를 추가한다.
           kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name": "k8s-ghcr"}]}'
 
-          echo $GHCR_TOKEN | docker login https://ghcr.io -u mohwa --password-stdin
+          # echo ${{ secrets.GHCR_TOKEN }} | docker login https://ghcr.io -u mohwa --password-stdin
 
           # install kompose
           curl -L https://github.com/kubernetes/kompose/releases/download/v1.24.0/kompose-linux-amd64 -o kompose
