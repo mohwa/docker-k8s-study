@@ -120,8 +120,8 @@ jobs:
           # https://loft.sh/blog/docker-compose-to-kubernetes-step-by-step-migration/
           echo $PATH
           echo $(kubectl version)
-
-          kubectl delete secret k8s-ghcr /dev/null >> /dev/null 2>&1
+          kubectl delete secret k8s-ghcr
+          kubectl delete secret k8s-ghcr >> /dev/null 2>&1
 
 
 #  cleanup:
