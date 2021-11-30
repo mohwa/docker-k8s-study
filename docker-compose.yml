@@ -18,7 +18,7 @@ services:
     expose:
       - "5000"
     depends_on:
-      -mysql
+      - mysql
     labels:
       kompose.image-pull-secret: k8s-ghcr
   mysql:
@@ -31,7 +31,7 @@ services:
     environment:
       # 환경 변수를 통해, mysql 의 root 패스워드를 설정한다.
       MYSQL_ROOT_PASSWORD: "password"
-      MYSQL_DATABASE: "my_app""
+      MYSQL_DATABASE: "my_app"
       # "%" 값은 모든 ip 로 부터 로그인을 허용한다.
       # https://serverfault.com/questions/793058/can-not-access-mysql-docker
       # MYSQL_ROOT_HOST: "%"
