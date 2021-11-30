@@ -131,6 +131,8 @@ jobs:
           # default serviceaccount 에 생성된 imagePullSecrets 를 추가한다.
           kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name": "k8s-ghcr"}]}'
 
+          echo ${{ secrets.GHCR_TOKEN }} | docker login https://ghcr.io -u mohwa --password-stdin
+
           # install kompose
           curl -L https://github.com/kubernetes/kompose/releases/download/v1.24.0/kompose-linux-amd64 -o kompose
           chmod +x kompose
