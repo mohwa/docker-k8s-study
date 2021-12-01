@@ -44,10 +44,12 @@ services:
 
       # docker 에는 /var/lib/* 라는 호스트 파일 시스템이 존재하고, DB 처럼 영구적으로 저장해야할 데이터들은 이곳에 저장할 수 있다.
       - ./mysql/mysql_data:/var/lib/mysql
-      - ./mysql/sqls:/docker-entrypoint-initdb.d
     environment:
       # 환경 변수를 통해, mysql 의 root 패스워드를 설정한다.
       MYSQL_ROOT_PASSWORD: "password"
+      # "%" 값은 모든 ip 로 부터 로그인을 허용한다.
+      # https://serverfault.com/questions/793058/can-not-access-mysql-docker
+      # MYSQL_ROOT_HOST: "%"
   nginx:
     build:
       context: ./nginx

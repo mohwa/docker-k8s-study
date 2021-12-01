@@ -26,8 +26,8 @@ services:
     # Restart policy 'unless-stopped' in service mysql is not supported, convert it to 'always'
     restart: always
     # service 및 target port 가 3306 으로 설정된다.
-    expose:
-      - "3306"
+    ports:
+      - "3306:3306"
     environment:
       # 환경 변수를 통해, mysql 의 root 패스워드를 설정한다.
       MYSQL_ROOT_PASSWORD: "password"
