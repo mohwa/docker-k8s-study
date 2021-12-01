@@ -141,7 +141,7 @@ jobs:
           chmod +x kompose
           sudo mv ./kompose /usr/local/bin/kompose
 
-          kompose -f ../docker-compose.yml convert
+          kompose -f ../docker-compose.yml convert --replicas 3
           # find -name "*.yaml" -exec sed -i "s/extensions\/v1beta1/apps\/v1/g" {} \;
           kubectl apply -f .
           kubectl get svc
