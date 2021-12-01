@@ -160,6 +160,8 @@ jobs:
             kubectl delete pvc mysql-data
           fi
 
+          echo pwd: $(pwd)
+
           kubectl apply -f .
           kubectl get svc
 
