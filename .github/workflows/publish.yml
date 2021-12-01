@@ -20,6 +20,7 @@ env:
   MYSQL_IMAGE_NAME: ghcr.io/${{ github.repository }}-mysql:${{ github.sha }}
   NGINX_IMAGE_NAME: ghcr.io/${{ github.repository }}-nginx:${{ github.sha }}
   VERSION: ${{ github.sha }}
+  GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
 jobs:
   build:
     name: Build
