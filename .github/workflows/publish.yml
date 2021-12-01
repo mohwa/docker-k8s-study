@@ -114,9 +114,6 @@ jobs:
           echo $PROJECT_NAME
           echo $PATH
 
-          mkdir -p k8s_config
-          cd k8s_config
-
           # k8s_ghcr: 쿠버네티스 secret 이름
           # password 에는 ghcr 패키지용 토큰을 설정한다.
           # https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#add-imagepullsecrets-to-a-service-account
@@ -140,6 +137,8 @@ jobs:
           curl -L https://github.com/kubernetes/kompose/releases/download/v1.24.0/kompose-linux-amd64 -o kompose
           chmod +x kompose
           sudo mv ./kompose /usr/local/bin/kompose
+
+          cd k8s_config
 
           kompose -f ../docker-compose.yml convert --replicas 3
           # find -name "*.yaml" -exec sed -i "s/extensions\/v1beta1/apps\/v1/g" {} \;

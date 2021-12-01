@@ -37,7 +37,6 @@ services:
       # MYSQL_ROOT_HOST: "%"
     labels:
       kompose.volume.storage-class-name: mysql-data
-      kompose.volume.size: 1Gi
       kompose.image-pull-secret: k8s-ghcr
   nginx:
     image: ${NGINX_IMAGE_NAME}
