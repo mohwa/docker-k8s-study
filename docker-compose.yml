@@ -38,6 +38,7 @@ services:
       # https://serverfault.com/questions/793058/can-not-access-mysql-docker
       # MYSQL_ROOT_HOST: "%"
     labels:
+      kompose.volume.storage-class-name: custom-storage-class-name
       kompose.volume.size: 1Gi
       kompose.image-pull-secret: k8s-ghcr
   nginx:
