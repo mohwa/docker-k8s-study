@@ -110,12 +110,12 @@ jobs:
       - name: Run docker containers
         run: |
           # docker project name 이 "/" 문자를 허용하지않아, 해당 문자를 "-" 로 대치시켰다.
-          PROJECT_NAME=$(echo ${{ github.repository }} | sed 's/\//-/g')-prod
+          #PROJECT_NAME=$(echo ${{ github.repository }} | sed 's/\//-/g')-prod
 
           echo PATH: $PATH
 
-          chmod +x scripts/run_k8s.sh
-          sh scripts/run_k8s.sh
+          #chmod +x scripts/run_k8s.sh
+          #sh scripts/run_k8s.sh
 #  cleanup:
 #    needs: [ build, deploy ]
 #    name: Clean up
