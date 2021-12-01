@@ -11,7 +11,7 @@ metadata:
 spec:
   storageClassName: mysql-data
   capacity:
-    storage: 1Gi
+    storage: 10Gi
   accessModes:
     - ReadWriteOnce
   hostPath:
