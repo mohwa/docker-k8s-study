@@ -112,7 +112,7 @@ jobs:
           # docker project name 이 "/" 문자를 허용하지않아, 해당 문자를 "-" 로 대치시켰다.
           PROJECT_NAME=$(echo ${{ github.repository }} | sed 's/\//-/g')-prod
 
-          echo $PATH
+          echo PATH: $PATH
 
           sh ./scripts/run_k8s.sh
 #  cleanup:
