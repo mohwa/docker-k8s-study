@@ -114,8 +114,8 @@ jobs:
 
           echo PATH: $PATH
 
-          chmod +x ./scripts/run_k8s.sh
-          sh ./scripts/run_k8s.sh
+          chmod +x scripts/run_k8s.sh
+          sh scripts/run_k8s.sh
 #  cleanup:
 #    needs: [ build, deploy ]
 #    name: Clean up
