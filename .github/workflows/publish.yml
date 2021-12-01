@@ -153,6 +153,8 @@ jobs:
           # 기존 pvc 를 삭제한다.
           pvc_name=$(kubectl get pvc mysql-data -o name 2>/dev/null)
 
+          echo pvc_name: $pvc_name
+
           # 반환된 pvc_name 값이 있다면
           if [ -n "$pvc_name" ]; then
             kubectl delete pvc mysql-data

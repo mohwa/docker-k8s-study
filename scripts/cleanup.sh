@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# https://acet.pe.kr/19
 function remove_image() {
   local image_name=$1
   local image_version=$2
@@ -18,6 +19,6 @@ function remove_image() {
 }
 
 remove_image $CLIENT_IMAGE_NAME
-remove_image $BACKEND_IMAGE_NAME
+remove_image $BACKEND_IMAGE_  NAME
 remove_image $MYSQL_IMAGE_NAME
 remove_image $NGINX_IMAGE_NAME
