@@ -28,6 +28,9 @@ services:
     # service 및 target port 가 3306 으로 설정된다.
     ports:
       - "3306:3306"
+    volumes:
+      # /var/lib/mysql 디렉토리를 host 파일 시스템의 /var/lib/docker/volumes/my-sql-data/mysql 에 저장된다.
+      - my-sql-data:/var/lib/mysql
     environment:
       # 환경 변수를 통해, mysql 의 root 패스워드를 설정한다.
       MYSQL_ROOT_PASSWORD: "password"
@@ -49,3 +52,6 @@ services:
       # https://t1.daumcdn.net/cfile/tistory/99ACBB4F5B288E161A?download
       kompose.service.nodeport.port: 30001
       kompose.image-pull-secret: k8s-ghcr
+
+volumes:
+  my-sql-data:
