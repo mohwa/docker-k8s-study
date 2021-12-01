@@ -150,6 +150,15 @@ jobs:
           # find -name "*.yaml" -exec sed -i "s/extensions\/v1beta1/apps\/v1/g" {} \;
 
           # 상황에 따라, deployment(pods), service 를 재배포하는것이 아닌, kubectl set 으로 pod 에 포함된 container(name으로) 이미지만 Rolling 업데이트할 수 있다.
+
+          # 기존 pv 를 삭제한다.
+          pv_name=$(kubectl get pv mysql-data-pv-volume -o name 2>/dev/null)
+
+          # 반환된 pvc_name 값이 있다면
+          if [ -n "$pv_name" ]; then
+            kubectl delete pv mysql-data-pv-volume
+          fi
+
           # 기존 pvc 를 삭제한다.
           pvc_name=$(kubectl get pvc mysql-data -o name 2>/dev/null)
 
