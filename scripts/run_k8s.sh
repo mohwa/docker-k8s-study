@@ -16,7 +16,7 @@ fi
 kubectl create secret docker-registry k8s-ghcr \
 --docker-server=ghcr.io \
 --docker-username=mohwa \
---docker-password=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 \
+--docker-password= \
 --docker-email=yanione2@gmail.com
 
 # default serviceaccount 에 생성된 imagePullSecrets 를 추가한다.
