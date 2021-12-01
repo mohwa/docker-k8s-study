@@ -3,6 +3,7 @@ version: "3"
 services:
   client:
     image: ${CLIENT_IMAGE_NAME}
+    # service 및 target port 가 3000 으로 설정된다.
     expose:
       - "3000"
     labels:
@@ -24,8 +25,9 @@ services:
     # unless-stopped 값 적용 시, pod 생성 시, 아래와 같은 warn 메시지를 반환한다.
     # Restart policy 'unless-stopped' in service mysql is not supported, convert it to 'always'
     restart: always
-    ports:
-      - "3306:3307"
+    # service 및 target port 가 3306 으로 설정된다.
+    expose:
+      - "3306"
     environment:
       # 환경 변수를 통해, mysql 의 root 패스워드를 설정한다.
       MYSQL_ROOT_PASSWORD: "password"
