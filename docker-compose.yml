@@ -30,7 +30,7 @@ services:
       - "3306:3306"
     volumes:
       # /var/lib/mysql 디렉토리를 host 파일 시스템의 /var/lib/docker/volumes/my-sql-data/mysql 에 저장된다.
-      - my-sql-data:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
     environment:
       # 환경 변수를 통해, mysql 의 root 패스워드를 설정한다.
       MYSQL_ROOT_PASSWORD: "password"
@@ -55,4 +55,4 @@ services:
       kompose.image-pull-secret: k8s-ghcr
 
 volumes:
-  my-sql-data:
+  mysql-data:
