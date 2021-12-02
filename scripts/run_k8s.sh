@@ -20,6 +20,12 @@ function update_service() {
   else
     kubectl apply -f $deployment_name-deployment.yaml
     kubectl apply -f $service_name-service.yaml
+
+    if [ "$service_name" = "mysql" ]; then
+      # persistentVolume 은 항상 다시 설정한다.
+      kubectl apply -f mysql-data-persistentvolume.yaml
+      kubectl apply -f mysql-data-persistentvolumeclaim.yaml
+    fi
   fi
 }
 
@@ -47,10 +53,6 @@ update_service client client client $CLIENT_IMAGE_NAME
 update_service backend backend backend $BACKEND_IMAGE_NAME
 update_service mysql mysql mysql $MYSQL_IMAGE_NAME
 update_service nginx nginx nginx $NGINX_IMAGE_NAME
-
-# persistentVolume 은 항상 다시 설정한다.
-kubectl apply -f mysql-data-persistentvolume.yaml
-kubectl apply -f mysql-data-persistentvolumeclaim.yaml
 
 kubectl get svc
 
