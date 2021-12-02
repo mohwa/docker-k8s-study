@@ -26,3 +26,5 @@ spec:
               operator: In
               values:
                 - w1-k8s
+                - w2-k8s
+                - w3-k8s
