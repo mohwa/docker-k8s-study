@@ -39,8 +39,8 @@ kompose -f ../docker-compose.yml convert --replicas 3
 kubectl delete deploy --all
 kubectl delete pods --all
 kubectl delete svc --all
-kubectl delete pv mysql-data-pv-volume
 kubectl delete pvc mysql-data
+kubectl delete pv mysql-data-pv-volume
 
 # persistentVolumeClaim 생성전에 persistentVolume 을 먼저 생성해야한다.
 kubectl apply -f mysql-data-persistentvolume.yaml
