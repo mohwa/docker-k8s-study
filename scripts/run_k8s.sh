@@ -20,12 +20,12 @@ function update_service() {
   else
     kubectl apply -f $deployment_name-deployment.yaml
     kubectl apply -f $service_name-service.yaml
+  fi
 
-    if [ "$service_name" = 'mysql' ]; then
-      # persistentVolume 설정
-      kubectl apply -f mysql-data-persistentvolume.yaml
-      kubectl apply -f mysql-data-persistentvolumeclaim.yaml
-    fi
+  if [ "$service_name" = 'mysql' ]; then
+    # persistentVolume 설정
+    kubectl apply -f mysql-data-persistentvolume.yaml
+    kubectl apply -f mysql-data-persistentvolumeclaim.yaml
   fi
 }
 
