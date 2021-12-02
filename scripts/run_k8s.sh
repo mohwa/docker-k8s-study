@@ -39,6 +39,7 @@ kompose -f ../docker-compose.yml convert --replicas 3
 kubectl delete deploy --all
 kubectl delete pods --all
 kubectl delete svc --all
+# pvc < pv 순서로 삭제해야한다.
 kubectl delete pvc mysql-data
 kubectl delete pv mysql-data-pv-volume
 
