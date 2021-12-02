@@ -47,7 +47,7 @@ cd k8s_config
 
 # kompose convert
 # https://kompose.io/user-guide/
-kompose -f ../docker-compose.yml convert --replicas 3
+kompose -f ../docker-compose.yml convert --controller replicationController --replicas 3
 
 update_service client client client $CLIENT_IMAGE_NAME
 update_service backend backend backend $BACKEND_IMAGE_NAME
