@@ -16,7 +16,7 @@ function apply_service() {
 
   if [ -n "$_service_name" ]; then
     # 롤링 업데이트
-    kubectl set image $deployment_name $container_name=$image_name
+    kubectl set image deployment $deployment_name $container_name=$image_name
   else
     kubectl apply -f $deployment_name-deployment.yaml
     kubectl apply -f $service_name-service.yaml
