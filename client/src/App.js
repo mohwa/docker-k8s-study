@@ -1,7 +1,16 @@
 import axios from 'axios';
 import React, {  useEffect, useCallback, useState } from 'react';
 
-const BACKGROUND_COLORS = ['red', 'blue', 'yellow', 'green', 'gray', "orange"];
+const BACKGROUND_COLORS = [
+    'red',
+    'blue',
+    'yellow',
+    'green',
+    'gray',
+    'orange',
+    'beige',
+    'aquamarine'
+];
 
 const App = () => {
     const [bgColor, setBgColor] = useState('');

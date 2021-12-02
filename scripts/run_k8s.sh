@@ -6,7 +6,7 @@
 # password 에는 ghcr 패키지용 토큰을 설정한다.
 # https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#add-imagepullsecrets-to-a-service-account
 # https://loft.sh/blog/docker-compose-to-kubernetes-step-by-step-migration/
-function apply_service() {
+function update_service() {
   local service_name=$1
   local deployment_name=$2
   local container_name=$3
@@ -49,10 +49,10 @@ cd k8s_config
 # https://kompose.io/user-guide/
 kompose -f ../docker-compose.yml convert --replicas 3
 
-apply_service client client client $CLIENT_IMAGE_NAME
-apply_service backend backend backend $BACKEND_IMAGE_NAME
-apply_service mysql mysql mysql $MYSQL_IMAGE_NAME
-apply_service nginx nginx nginx $NGINX_IMAGE_NAME
+update_service client client client $CLIENT_IMAGE_NAME
+update_service backend backend backend $BACKEND_IMAGE_NAME
+update_service mysql mysql mysql $MYSQL_IMAGE_NAME
+update_service nginx nginx nginx $NGINX_IMAGE_NAME
 
 kubectl get svc
 
