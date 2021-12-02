@@ -16,3 +16,11 @@ spec:
     - ReadWriteOnce
   hostPath:
     path: "/var/lib/docker/volumes/mysql-data"
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - w1-k8s
