@@ -56,4 +56,8 @@ else
   kubectl apply -f .
 fi
 
-kubectl get svc deployment pod pv pvc
+kubectl get svc
+kubectl get deployment
+kubectl get pod
+kubectl get pvc
+kubectl get pv
