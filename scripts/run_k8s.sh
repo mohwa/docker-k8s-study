@@ -38,9 +38,8 @@ kompose -f ../docker-compose.yml convert --replicas 3
 # pvc / pv 를 삭제하기위해, 위 과정처럼, 바인딩된 deploy, service 를 먼저 지워줘야한다(이는 임시방편이고, 롤링 업데이트 방식으로 바꿔야한다)
 # delete pvc
 # delete pv
-kubectl delete deploy --all
-kubectl delete pods --all
-kubectl delete svc --all
+kubectl delete deploy client backend mysql nginx
+kubectl delete svc client backend mysql nginx
 # pvc < pv 순서로 삭제해야한다.
 kubectl delete pvc mysql-data
 kubectl delete pv mysql-data-pv-volume
