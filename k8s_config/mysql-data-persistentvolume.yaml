@@ -17,4 +17,13 @@ spec:
   hostPath:
     # 호스트의 디렉터리 위치
     path: "/var/lib/docker/volumes/mysql-data"
-
+  # nodeAffinity 를 통해, volume 에 접근할 수 있는 노드를 제한할 수 있다.
+  # https://lapee79.github.io/article/use-a-local-disk-by-local-volume-static-provisioner-in-kubernetes/
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - w1-k8s
