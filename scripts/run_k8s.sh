@@ -24,6 +24,8 @@ sudo mv ./kompose /usr/local/bin/kompose
 
 cd k8s_config
 
+# kompose convert
+# https://kompose.io/user-guide/
 kompose -f ../docker-compose.yml convert --replicas 3
 # find -name "*.yaml" -exec sed -i "s/extensions\/v1beta1/apps\/v1/g" {} \;
 
