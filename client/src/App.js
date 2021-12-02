@@ -8,7 +8,7 @@ const BACKGROUND_COLORS = [
     'green',
     'gray',
     'orange',
-    'beige',
+    // 'beige',
     'aquamarine'
 ];
 
