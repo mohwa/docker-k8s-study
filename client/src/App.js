@@ -4,8 +4,8 @@ import React, {  useEffect, useCallback, useState } from 'react';
 const BACKGROUND_COLORS = [
     'red',
     'blue',
-    'yellow',
-    'green',
+    // 'yellow',
+    // 'green',
     'gray',
     'orange',
     // 'beige',
