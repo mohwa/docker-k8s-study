@@ -52,9 +52,14 @@ if [ -n "$client_service_name" ]; then
 else
   delete_all_service
 
-  # persistentVolumeClaim 생성전에 persistentVolume 을 먼저 생성해야한다.
+  # persistentVolumeClaim 생성전에 storageClass 와 persistentVolume 을 먼저 생성해야한다.
   kubectl apply -f mysql-data-storage-class.yaml
   kubectl apply -f mysql-data-persistentvolume.yaml
+
+  # persistentVolumeClaim 생성전에 storageClass 와 persistentVolume 을 먼저 생성해야한다.
+  kubectl apply -f vol-test-storage-class.yaml
+  kubectl apply -f vol-test-persistentvolume.yaml
+
   kubectl apply -f .
 fi
 
