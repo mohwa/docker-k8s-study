@@ -1,6 +1,0 @@
-# Dependency directories
-.DS_Store
-node_modules
-.dockerignore
-Dockerfile
-Dockerfile.dev

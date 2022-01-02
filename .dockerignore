@@ -1,0 +1,9 @@
+# Dependency directories
+dist
+node_modules
+nginx
+scripts
+.github
+.dockerignore
+Dockerfile
+Dockerfile.dev

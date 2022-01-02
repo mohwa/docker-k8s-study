@@ -1,6 +1,0 @@
-# Dependency directories
-node_modules/
-dist
-.dockerignore
-Dockerfile
-Dockerfile.dev

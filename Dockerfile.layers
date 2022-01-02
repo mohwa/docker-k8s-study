@@ -1,0 +1,6 @@
+FROM alpine:latest
+
+RUN echo first-c
+ADD ./second.txt .
+COPY ./third.txt .
+RUN echo fourth1
