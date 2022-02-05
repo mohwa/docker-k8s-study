@@ -51,7 +51,7 @@ services:
     labels:
       kompose.service.type: nodeport
       # NodePort 는 30000 ~ 32767 포트로 설정해야한다.
-      # NodePort(31000) < service port(3001) < target(pod) port(80)
+      # NodePort(30001) < service port(3001) < target(pod) port(80)
       # https://bcho.tistory.com/1262
       # https://t1.daumcdn.net/cfile/tistory/99ACBB4F5B288E161A?download
       kompose.service.nodeport.port: 30001
