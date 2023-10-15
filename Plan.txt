@@ -1,0 +1,6 @@
+
+1. 목표 : AWS Application Development Lifecycle Cycle(ADLC) Management Solution 구축
+	
+2. 학습 : AWS OpsWorks
+	
+3. 기능 : 시스템 설치, 어플리케이션 자동화
