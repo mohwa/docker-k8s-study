@@ -1,6 +1,33 @@
 
 1. 목표 : AWS Application Development Lifecycle Cycle(ADLC) Management Solution 구축
 	
-2. 학습 : AWS OpsWorks
+   학습 : AWS OpsWorks
 	
-3. 기능 : 시스템 설치, 어플리케이션 자동화
+   기능 : 시스템 설치, 어플리케이션 자동화
+
+   벤치마킹
+
+      AWS OpsWorks란?
+	https://nearhome.tistory.com/118
+
+      AWS CloudFormation
+	https://nearhome.tistory.com/117
+
+      리눅스 Audit 시스템
+	https://techintguru.blogspot.com/2017/04/audit.html
+	
+      linux auditd Daemon
+	
+	https://velog.io/@khyup0629/Linux-audit-daemon
+	
+   리눅스 시스템 관리 프로그램
+	
+        https://www.linux.co.kr/bbs/board.php?bo_table=lecture&wr_id=2348
+
+   리눅스 데이터시스템 IT운영관리 자동화 '이지오토' 무료체험 제공
+
+        https://www.etnews.com/20200511000370
+
+   권한관리 및 감사추적 솔루션   
+
+        https://www.lsware.co.kr/solution/sol_ucc.html
